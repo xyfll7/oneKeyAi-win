@@ -32,7 +32,7 @@ namespace oneKeyAi_win
     public partial class App : Application
     {
         public TaskbarIcon? TrayIcon { get; private set; }
-        //private Window? _window;
+        public Window? _window;
 
         /// <summary>
         /// Initializes the singleton application object.  This is the first line of authored code
@@ -49,10 +49,18 @@ namespace oneKeyAi_win
         /// <param name="args">Details about the launch request and process.</param>
         protected override void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
         {
-            //_window = new MainWindow();
-            //_window.Activate();
             InitializeTrayIcon();
         }
+        
+        public void CreateMainWindow()
+        {
+            if (_window == null)
+            {
+                _window = new MainWindow();
+                _window.Closed += (sender, args) => _window = null;
+            }
+        }
+  
         private void InitializeTrayIcon()
         {
             if (Resources["TrayIcon"] is TaskbarIcon trayIcon)

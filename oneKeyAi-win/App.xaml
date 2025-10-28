@@ -13,7 +13,7 @@
                 <ResourceDictionary Source="\Resources\TrayIconResources.xaml" />
             </ResourceDictionary.MergedDictionaries>
             <!-- Other app resources here -->
-            <viewModels:TrayIconModels x:Key="TrayIconViewModel" />
+            <viewModels:TrayIconModel x:Key="TrayIconViewModel" />
         </ResourceDictionary>
     </Application.Resources>
 </Application>
