@@ -9,17 +9,17 @@
         Visibility="Visible"
         ToolTipText="oneKey"
         ContextMenuMode="SecondWindow"
-        LeftClickCommand="{Binding ShowHideWindowCommand}"
+        LeftClickCommand="{Binding Source={StaticResource TrayIconViewModel}, Path=ShowHideWindowCommand}"
         NoLeftClickDelay="True"
         IconSource="\Assets\Logo.ico"
         >
         <tb:TaskbarIcon.ContextFlyout>
             <MenuFlyout>
-                <MenuFlyoutItem Command="{Binding TestCommand}" Text="Test"/>
+                <MenuFlyoutItem Command="{Binding Source={StaticResource TrayIconViewModel}, Path=TestCommand}" Text="Test"/>
                 <MenuFlyoutSeparator />
-                <MenuFlyoutItem Command="{Binding ShowHideWindowCommand}" Text="ShowHide"/>
+                <MenuFlyoutItem Command="{Binding Source={StaticResource TrayIconViewModel}, Path=ShowHideWindowCommand}" Text="ShowHide"/>
                 <MenuFlyoutSeparator />
-                <MenuFlyoutItem Command="{Binding ExitApplicationCommand}" Text="Exit"/>
+                <MenuFlyoutItem Command="{Binding Source={StaticResource TrayIconViewModel}, Path=ExitApplicationCommand}" Text="Exit"/>
             </MenuFlyout>
         </tb:TaskbarIcon.ContextFlyout>
     </tb:TaskbarIcon>

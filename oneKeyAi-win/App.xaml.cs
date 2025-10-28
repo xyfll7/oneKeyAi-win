@@ -1,4 +1,5 @@
 ﻿using H.NotifyIcon;
+using H.NotifyIcon.Core;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
@@ -7,11 +8,13 @@ using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
 using Microsoft.UI.Xaml.Shapes;
+using oneKeyAi_win.Configuration;
 using oneKeyAi_win.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
@@ -29,7 +32,7 @@ namespace oneKeyAi_win
     public partial class App : Application
     {
         public TaskbarIcon? TrayIcon { get; private set; }
-        private Window? _window;
+        //private Window? _window;
 
         /// <summary>
         /// Initializes the singleton application object.  This is the first line of authored code
@@ -52,9 +55,10 @@ namespace oneKeyAi_win
         }
         private void InitializeTrayIcon()
         {
-            TrayIcon = (TaskbarIcon)Resources["TrayIcon"];
-            TrayIcon.DataContext = new TrayIconModels();
-            TrayIcon.ForceCreate();
+            if (Resources["TrayIcon"] is TaskbarIcon trayIcon)
+            {
+                trayIcon.ForceCreate();
+            }
         }
     }
 }
