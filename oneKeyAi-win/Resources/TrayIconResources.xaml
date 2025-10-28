@@ -7,7 +7,7 @@
     <tb:TaskbarIcon
         x:Key="TrayIcon"
         Visibility="Visible"
-        ToolTipText="ToolTip"
+        ToolTipText="oneKey"
         ContextMenuMode="SecondWindow"
         LeftClickCommand="{Binding ShowHideWindowCommand}"
         NoLeftClickDelay="True"
