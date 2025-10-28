@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "oneKeyAi-win (Package)": {
+      "commandName": "MsixPackage"
+    },
+    "oneKeyAi-win (Unpackaged)": {
+      "commandName": "Project"
+    }
+  }
+}
