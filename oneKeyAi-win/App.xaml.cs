@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
+﻿using H.NotifyIcon;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
@@ -11,6 +7,12 @@ using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
 using Microsoft.UI.Xaml.Shapes;
+using oneKeyAi_win.ViewModels;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.Foundation;
@@ -26,6 +28,7 @@ namespace oneKeyAi_win
     /// </summary>
     public partial class App : Application
     {
+        public TaskbarIcon? TrayIcon { get; private set; }
         private Window? _window;
 
         /// <summary>
@@ -43,8 +46,15 @@ namespace oneKeyAi_win
         /// <param name="args">Details about the launch request and process.</param>
         protected override void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
         {
-            _window = new MainWindow();
-            _window.Activate();
+            //_window = new MainWindow();
+            //_window.Activate();
+            InitializeTrayIcon();
+        }
+        private void InitializeTrayIcon()
+        {
+            TrayIcon = (TaskbarIcon)Resources["TrayIcon"];
+            TrayIcon.DataContext = new TrayIconModels();
+            TrayIcon.ForceCreate();
         }
     }
 }
