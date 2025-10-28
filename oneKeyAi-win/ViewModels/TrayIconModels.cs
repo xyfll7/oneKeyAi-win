@@ -13,7 +13,7 @@ namespace oneKeyAi_win.ViewModels
     public partial class TrayIconModels : ObservableObject
     {
         [RelayCommand]
-        private async void Test()
+        private static async Task Test()
         {
             System.Diagnostics.Debug.WriteLine($"11111");
             UserConfig CC = new UserConfig()
@@ -29,14 +29,14 @@ namespace oneKeyAi_win.ViewModels
             System.Diagnostics.Debug.WriteLine($"配置文件路径: {ConfigService.GetConfigPath()}");
         }
         [RelayCommand]
-        private void ShowHideWindow()
+        private static void ShowHideWindow()
         {
             // Logic to show/hide a window on demand
             Console.WriteLine("Hello, World!");
         }
 
         [RelayCommand]
-        private void ExitApplication()
+        private static void ExitApplication()
         {
             Console.WriteLine("Hello, World!");
         }

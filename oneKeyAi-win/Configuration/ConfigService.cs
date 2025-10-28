@@ -12,7 +12,7 @@ namespace oneKeyAi_win.Configuration
     internal class ConfigService
     {
         // C:\Users\<用户名>\AppData\Roaming\MyApp\config.json
-        private static readonly string AppFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "oneKey");
+        private static readonly string AppFolder = Path.Combine(ApplicationData.Current.RoamingFolder.Path, "oneKey");
         private static readonly string ConfigPath = Path.Combine(AppFolder, "config.json");
         private static readonly JsonSerializerOptions JsonOptions = new()
         {
