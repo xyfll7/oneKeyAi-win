@@ -31,7 +31,6 @@ namespace oneKeyAi_win
     /// </summary>
     public partial class App : Application
     {
-        public TaskbarIcon? TrayIcon { get; private set; }
         public Window? _window;
 
         /// <summary>
@@ -51,21 +50,34 @@ namespace oneKeyAi_win
         {
             InitializeTrayIcon();
         }
-        
-        public void CreateMainWindow()
-        {
-            if (_window == null)
-            {
-                _window = new MainWindow();
-                _window.Closed += (sender, args) => _window = null;
-            }
-        }
-  
+
         private void InitializeTrayIcon()
         {
             if (Resources["TrayIcon"] is TaskbarIcon trayIcon)
             {
                 trayIcon.ForceCreate();
+            }
+        }
+
+        public void ToggleMainWindow()
+        {
+            if (_window == null)
+            {
+                System.Diagnostics.Debug.WriteLine($"Open");
+                _window = new MainWindow();
+                _window.Closed += (sender, args) => _window = null;
+                _window.Activate();
+            }
+            else if(_window.Visible)
+            {
+                System.Diagnostics.Debug.WriteLine($"Hide");
+                _window.Hide();
+            }
+            else
+            {
+                System.Diagnostics.Debug.WriteLine($"Activate");
+                _window.Show();
+                _window.Activate();
             }
         }
     }

@@ -1,16 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Window
-    x:Class="oneKeyAi_win.MainWindow"
+<Page
+    x:Class="oneKeyAi_win.Views.SettingsPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:oneKeyAi_win"
-    xmlns:views="using:oneKeyAi_win.Views"
+    xmlns:local="using:oneKeyAi_win.Views"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d"
-    Title="oneKey">
-    <Window.SystemBackdrop>
-        <MicaBackdrop />
-    </Window.SystemBackdrop>
-    <views:MainPage />
-</Window>
+    mc:Ignorable="d">
+
+    <Grid>
+        <TextBlock Text="SettingsPage Page" FontSize="24"/>
+    </Grid>
+</Page>
