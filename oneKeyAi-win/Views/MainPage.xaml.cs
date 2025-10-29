@@ -29,15 +29,17 @@ namespace oneKeyAi_win.Views
         public MainPage()
         {
             this.InitializeComponent();
-            
+
             // 从XAML资源中获取ViewModel
             if (Resources.TryGetValue("MainPageViewModel", out object? value) && value is MainPageViewModel viewModel)
             {
                 _viewModel = viewModel;
             }
-            
+
             // 设置NavigationView的导航事件
             NavigationView.ItemInvoked += OnNavigationViewItemInvoked;
+            NavigateToPage("Home"); // 默认导航到首页
+            SelectNavigationItem("Home");
         }
 
         private void OnNavigationViewItemInvoked(NavigationView sender, NavigationViewItemInvokedEventArgs args)
@@ -62,6 +64,18 @@ namespace oneKeyAi_win.Views
             {
                 Type pageType = _viewModel.GetPageTypeForTag(tag);
                 NavigationViewFrame.Navigate(pageType);
+            }
+        }
+
+        private void SelectNavigationItem(string tag)
+        {
+            foreach (NavigationViewItemBase item in NavigationView.MenuItems)
+            {
+                if (item is NavigationViewItem navViewItem && navViewItem.Tag?.ToString() == tag)
+                {
+                    NavigationView.SelectedItem = navViewItem;
+                    return;
+                }
             }
         }
     }
