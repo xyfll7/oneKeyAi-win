@@ -33,12 +33,8 @@ namespace oneKeyAi_win.ViewModels
         {
             // Logic to show the MainWindow
             var app = (App)App.Current;
-
             // Use the app's method to create or get the main window
-            app.CreateMainWindow();
-            var window = app._window;
-
-            window?.Activate();
+            app.ToggleMainWindow();
         }
 
         [RelayCommand]
