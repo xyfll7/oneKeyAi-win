@@ -14,6 +14,9 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
   <ItemGroup>
+    <Content Remove="Assets\favicon.png" />
+  </ItemGroup>
+  <ItemGroup>
     <None Remove="Assets\Logo.ico" />
     <None Remove="MainWindow.xaml" />
     <None Remove="Resources\TrayIconResources.xaml" />
@@ -30,7 +33,6 @@
     <Content Include="Assets\Square150x150Logo.scale-200.png" />
     <Content Include="Assets\Square44x44Logo.scale-200.png" />
     <Content Include="Assets\Square44x44Logo.targetsize-24_altform-unplated.png" />
-    <Content Include="Assets\StoreLogo.png" />
     <Content Include="Assets\Wide310x150Logo.scale-200.png" />
   </ItemGroup>
 
