@@ -26,6 +26,12 @@ namespace oneKeyAi_win
         public MainWindow()
         {
             InitializeComponent();
+            var appWindow = this.AppWindow;
+            if (appWindow != null)
+            {
+                string iconPath = Path.Combine(AppContext.BaseDirectory, @"Assets\Logo.ico");
+                appWindow.SetIcon(iconPath);
+            }
         }
     }
 }
