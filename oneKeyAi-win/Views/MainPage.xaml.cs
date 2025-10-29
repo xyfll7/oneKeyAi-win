@@ -5,6 +5,7 @@ using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
+using oneKeyAi_win.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -23,9 +24,45 @@ namespace oneKeyAi_win.Views
     /// </summary>
     public sealed partial class MainPage : Page
     {
+        private MainPageViewModel? _viewModel;
+
         public MainPage()
         {
-            InitializeComponent();
+            this.InitializeComponent();
+            
+            // 从XAML资源中获取ViewModel
+            if (Resources.TryGetValue("MainPageViewModel", out object? value) && value is MainPageViewModel viewModel)
+            {
+                _viewModel = viewModel;
+            }
+            
+            // 设置NavigationView的导航事件
+            NavigationView.ItemInvoked += OnNavigationViewItemInvoked;
+        }
+
+        private void OnNavigationViewItemInvoked(NavigationView sender, NavigationViewItemInvokedEventArgs args)
+        {
+            if (args.IsSettingsInvoked)
+            {
+                NavigateToPage("Settings");
+            }
+            else if (args.InvokedItemContainer is NavigationViewItem navItem)
+            {
+                string? navItemTag = navItem.Tag?.ToString();
+                if (!string.IsNullOrEmpty(navItemTag))
+                {
+                    NavigateToPage(navItemTag);
+                }
+            }
+        }
+
+        private void NavigateToPage(string tag)
+        {
+            if (_viewModel != null)
+            {
+                Type pageType = _viewModel.GetPageTypeForTag(tag);
+                NavigationViewFrame.Navigate(pageType);
+            }
         }
     }
 }
