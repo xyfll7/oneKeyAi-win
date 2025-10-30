@@ -30,6 +30,7 @@ namespace oneKeyAi_win
             if (appWindow != null)
             {
                 string iconPath = Path.Combine(AppContext.BaseDirectory, @"Assets\Logo.ico");
+                ExtendsContentIntoTitleBar = true;
                 appWindow.SetIcon(iconPath);
             }
         }
