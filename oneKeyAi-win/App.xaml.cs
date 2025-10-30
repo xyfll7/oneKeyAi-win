@@ -63,19 +63,16 @@ namespace oneKeyAi_win
         {
             if (_window == null)
             {
-                System.Diagnostics.Debug.WriteLine($"Open");
                 _window = new MainWindow();
                 _window.Closed += (sender, args) => _window = null;
                 _window.Activate();
             }
             else if(_window.Visible)
             {
-                System.Diagnostics.Debug.WriteLine($"Hide");
                 _window.Hide();
             }
             else
             {
-                System.Diagnostics.Debug.WriteLine($"Activate");
                 _window.Show();
                 _window.Activate();
             }
