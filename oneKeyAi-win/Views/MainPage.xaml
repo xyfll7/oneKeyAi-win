@@ -13,7 +13,7 @@
         <vm:MainPageViewModel x:Key="MainPageViewModel"/>
     </Page.Resources>
 
-    <Grid  DataContext="{StaticResource MainPageViewModel}">
+    <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
@@ -36,7 +36,8 @@
                         x:Name="NavigationView" 
                         IsPaneToggleButtonVisible="False" 
                         IsBackButtonVisible="Collapsed"
-                        IsBackEnabled="True">
+                        IsBackEnabled="{x:Bind NavigationViewFrame.CanGoBack, Mode=OneWay}"
+                        PaneTitle="WinUI Gallery">
             <NavigationView.Header>
                 <SymbolIcon Symbol="Setting"/>
             </NavigationView.Header>
@@ -90,7 +91,7 @@
             </NavigationView.PaneFooter>
             
             <NavigationView.Content>
-                <Frame x:Name="NavigationViewFrame" Height="300"/>
+                <Frame x:Name="NavigationViewFrame" />
             </NavigationView.Content>
         </NavigationView>
     </Grid>

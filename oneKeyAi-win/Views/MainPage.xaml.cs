@@ -11,7 +11,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
-using System.Security.AccessControl;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 
@@ -39,7 +38,7 @@ namespace oneKeyAi_win.Views
      
             // 设置NavigationView的导航事件
             NavigationView.ItemInvoked += OnNavigationViewItemInvoked;
-            _viewModel?.NavigateToPage("Home"); // 默认导航到首页
+            NavigateToPage("Home"); // 默认导航到首页
             SelectNavigationItem("Home");
         }
 
@@ -47,19 +46,27 @@ namespace oneKeyAi_win.Views
         {
             if (args.IsSettingsInvoked)
             {
-                _viewModel?.NavigateToPage("Settings");
+                NavigateToPage("Settings");
             }
             else if (args.InvokedItemContainer is NavigationViewItem navItem)
             {
                 string? navItemTag = navItem.Tag?.ToString();
                 if (!string.IsNullOrEmpty(navItemTag))
                 {
-                    _viewModel?.NavigateToPage(navItemTag);
+                    NavigateToPage(navItemTag);
                 }
             }
         }
 
-   
+        // 新的导航方法，直接使用Frame进行导航
+        public void NavigateToPage(string pageTag)
+        {
+            var pageType = _viewModel?.GetPageTypeForTag(pageTag);
+            if (pageType != null)
+            {
+                NavigationViewFrame.Navigate(pageType);
+            }
+        }
 
         private void SelectNavigationItem(string tag)
         {
@@ -80,7 +87,10 @@ namespace oneKeyAi_win.Views
 
         private void TitleBar_BackRequested(TitleBar sender, object args)
         {
-            NavigationViewFrame.GoBack();
+            if (NavigationViewFrame.CanGoBack)
+            {
+                NavigationViewFrame.GoBack();
+            }
         }
     }
 }
