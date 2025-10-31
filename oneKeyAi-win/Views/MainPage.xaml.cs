@@ -24,7 +24,7 @@ namespace oneKeyAi_win.Views
     /// </summary>
     public sealed partial class MainPage : Page
     {
-        private MainPageViewModel? _viewModel;
+        private readonly MainPageViewModel? _viewModel;
 
         public MainPage()
         {
@@ -38,8 +38,12 @@ namespace oneKeyAi_win.Views
      
             // 设置NavigationView的导航事件
             NavigationView.ItemInvoked += OnNavigationViewItemInvoked;
+            
+            // 设置Frame的导航事件，用于在页面导航时更新选中的NavigationViewItem
+            NavigationViewFrame.Navigated += (_,_) => OnFrameNavigated();
+
             NavigateToPage("Home"); // 默认导航到首页
-            SelectNavigationItem("Home");
+            OnFrameNavigated();
         }
 
         private void OnNavigationViewItemInvoked(NavigationView sender, NavigationViewItemInvokedEventArgs args)
@@ -68,14 +72,33 @@ namespace oneKeyAi_win.Views
             }
         }
 
-        private void SelectNavigationItem(string tag)
+        private void OnFrameNavigated()
         {
-            foreach (NavigationViewItemBase item in NavigationView.MenuItems)
+            // 根据当前页面类型更新NavigationView的选中项 - 不依赖参数e
+            if (NavigationViewFrame.Content != null)
             {
-                if (item is NavigationViewItem navViewItem && navViewItem.Tag?.ToString() == tag)
+                Type currentPageType = NavigationViewFrame.Content.GetType();
+                var pagesMap = _viewModel?.GetPagesMap();
+                if (pagesMap != null)
                 {
-                    NavigationView.SelectedItem = navViewItem;
-                    return;
+                    // Create reverse mapping to find the tag for the current page type
+                    var reverseMap = new Dictionary<Type, string>();
+                    foreach (var kvp in pagesMap)
+                    {
+                        reverseMap[kvp.Value] = kvp.Key;
+                    }
+
+                    if (reverseMap.TryGetValue(currentPageType, out string? pageTag) && pageTag != null)
+                    {
+                        foreach (NavigationViewItemBase item in NavigationView.MenuItems.Cast<NavigationViewItemBase>())
+                        {
+                            if (item is NavigationViewItem navViewItem && navViewItem.Tag?.ToString() == pageTag)
+                            {
+                                NavigationView.SelectedItem = navViewItem;
+                                return;
+                            }
+                        }
+                    }
                 }
             }
         }

@@ -1,6 +1,7 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 namespace oneKeyAi_win.ViewModels
 {
@@ -18,6 +19,12 @@ namespace oneKeyAi_win.ViewModels
         public Type GetPageTypeForTag(string tag)
         {
             return _pagesMap.TryGetValue(tag, out var pageType) ? pageType : typeof(Views.HistoryPage);
+        }
+
+        // Expose the pages map for creating reverse mapping in the view
+        public Dictionary<string, Type> GetPagesMap()
+        {
+            return _pagesMap;
         }
     }
 }
