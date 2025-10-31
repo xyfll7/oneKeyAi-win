@@ -68,6 +68,12 @@ namespace oneKeyAi_win.Views
             var pageType = _viewModel?.GetPageTypeForTag(pageTag);
             if (pageType != null)
             {
+                // 检查当前页面是否已经是目标页面，如果是则不进行导航
+                if (NavigationViewFrame.Content != null && NavigationViewFrame.Content.GetType() == pageType)
+                {
+                    return;
+                }
+                
                 NavigationViewFrame.Navigate(pageType);
             }
         }
