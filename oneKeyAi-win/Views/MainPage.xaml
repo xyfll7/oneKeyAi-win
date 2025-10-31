@@ -21,7 +21,7 @@
         <TitleBar 
                 Margin="2 4 0 0"
                 x:Name="TitleBar"
-                Title="WinUI Gallery"
+                Title="oneKey"
                 Subtitle="Preview"
                 IsBackButtonVisible="True"
                 IsBackButtonEnabled="{x:Bind NavigationViewFrame.CanGoBack, Mode=OneWay}"
@@ -33,11 +33,13 @@
             </TitleBar.IconSource>
         </TitleBar>
         <NavigationView Grid.Row="1" 
+                        Height="Auto"
+                        Width="Auto"
                         x:Name="NavigationView" 
                         IsPaneToggleButtonVisible="False" 
                         IsBackButtonVisible="Collapsed"
                         IsBackEnabled="{x:Bind NavigationViewFrame.CanGoBack, Mode=OneWay}"
-                        PaneTitle="WinUI Gallery">
+                        PaneTitle="oneKey">
             <NavigationView.Header>
                 <SymbolIcon Symbol="Setting"/>
             </NavigationView.Header>
@@ -50,16 +52,7 @@
                 </DataTemplate>
             </NavigationView.HeaderTemplate>
          
-            <NavigationView.PaneCustomContent>
-                <ScrollViewer VerticalScrollBarVisibility="Auto">
-                    <NavigationViewItem
-                       x:Name="HomeItems"
-                       Icon="Library"
-                       Content="Test"
-                       Tag="Home"
-                       SelectsOnInvoked="True"/>
-                </ScrollViewer>
-            </NavigationView.PaneCustomContent>
+        
             <NavigationView.MenuItems>
                 <NavigationViewItem
                 x:Name="HomeItem"
