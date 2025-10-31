@@ -12,30 +12,85 @@
     <Page.Resources>
         <vm:MainPageViewModel x:Key="MainPageViewModel"/>
     </Page.Resources>
-    
-    <Grid DataContext="{StaticResource MainPageViewModel}">
-        <NavigationView x:Name="NavigationView" PaneDisplayMode="Auto">
+
+    <Grid  DataContext="{StaticResource MainPageViewModel}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <TitleBar 
+                Margin="2 4 0 0"
+                x:Name="titleBar"
+                Title="WinUI Gallery"
+                Subtitle="Preview"
+                IsBackButtonVisible="True"
+                IsPaneToggleButtonVisible="True"
+                BackRequested="titleBar_BackRequested"
+                PaneToggleRequested="titleBar_PaneToggleRequested" >
+            <TitleBar.IconSource>
+                <ImageIconSource ImageSource="/Assets/Logo.ico" />
+            </TitleBar.IconSource>
+        </TitleBar>
+        <NavigationView Grid.Row="1" 
+                        x:Name="NavigationView" 
+                        IsPaneToggleButtonVisible="False" 
+                        IsBackButtonVisible="Collapsed"
+                        IsBackEnabled="True">
+            <NavigationView.Header>
+                <SymbolIcon Symbol="Setting"/>
+            </NavigationView.Header>
+            <NavigationView.HeaderTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                        <SymbolIcon Symbol="Setting"/>
+                        <TextBlock Text="122111sss" FontSize="20" FontWeight="Bold"/>
+                    </StackPanel>
+                </DataTemplate>
+            </NavigationView.HeaderTemplate>
+         
+            <NavigationView.PaneCustomContent>
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <NavigationViewItem
+                       x:Name="HomeItems"
+                       Icon="Library"
+                       Content="Test"
+                       Tag="Home"
+                       SelectsOnInvoked="True"/>
+                </ScrollViewer>
+            </NavigationView.PaneCustomContent>
             <NavigationView.MenuItems>
                 <NavigationViewItem
-                   x:Name="HomeItem"
-                   Icon="Home"
-                   Content="Home"
-                   Tag="Home"
-                   SelectsOnInvoked="True"/>
+                x:Name="HomeItem"
+                Icon="Home"
+                Content="Home"
+                Tag="Home"
+                SelectsOnInvoked="True"/>
                 <NavigationViewItem
-                    x:Name="HistoryItem"
-                    Icon="Send"
-                    Content="History"
-                    Tag="History"
-                    SelectsOnInvoked="True"/>
+                x:Name="HistoryItem"
+                Icon="Send"
+                Content="History"
+                Tag="History"
+                SelectsOnInvoked="True"/>
                 <NavigationViewItem
-                    x:Name="TestItem"
-                    Icon="Attach"
-                    Content="Test"
-                    Tag="Test"
-                    SelectsOnInvoked="True"/>
+                x:Name="TestItem"
+                Icon="Attach"
+                Content="Test"
+                Tag="Test"
+                SelectsOnInvoked="True"/>
             </NavigationView.MenuItems>
-            <Frame x:Name="NavigationViewFrame" />
+            <NavigationView.PaneFooter>
+                    <NavigationViewItem
+                       Content="©2025 xyf"
+                       Tag="Test"
+                       FontSize="10"
+                       SelectsOnInvoked="True"
+                       IsEnabled="False"
+                      />
+            </NavigationView.PaneFooter>
+            
+            <NavigationView.Content>
+                <Frame x:Name="NavigationViewFrame" Height="300"/>
+            </NavigationView.Content>
         </NavigationView>
     </Grid>
 </Page>

@@ -78,5 +78,15 @@ namespace oneKeyAi_win.Views
                 }
             }
         }
+
+        private void titleBar_PaneToggleRequested(TitleBar sender, object args)
+        {
+
+        }
+
+        private void titleBar_BackRequested(TitleBar sender, object args)
+        {
+
+        }
     }
 }
