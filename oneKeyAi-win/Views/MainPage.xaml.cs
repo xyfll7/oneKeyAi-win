@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Security.AccessControl;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 
@@ -35,10 +36,10 @@ namespace oneKeyAi_win.Views
             {
                 _viewModel = viewModel;
             }
-
+     
             // 设置NavigationView的导航事件
             NavigationView.ItemInvoked += OnNavigationViewItemInvoked;
-            NavigateToPage("Home"); // 默认导航到首页
+            _viewModel?.NavigateToPage("Home"); // 默认导航到首页
             SelectNavigationItem("Home");
         }
 
@@ -46,26 +47,19 @@ namespace oneKeyAi_win.Views
         {
             if (args.IsSettingsInvoked)
             {
-                NavigateToPage("Settings");
+                _viewModel?.NavigateToPage("Settings");
             }
             else if (args.InvokedItemContainer is NavigationViewItem navItem)
             {
                 string? navItemTag = navItem.Tag?.ToString();
                 if (!string.IsNullOrEmpty(navItemTag))
                 {
-                    NavigateToPage(navItemTag);
+                    _viewModel?.NavigateToPage(navItemTag);
                 }
             }
         }
 
-        private void NavigateToPage(string tag)
-        {
-            if (_viewModel != null)
-            {
-                Type pageType = _viewModel.GetPageTypeForTag(tag);
-                NavigationViewFrame.Navigate(pageType);
-            }
-        }
+   
 
         private void SelectNavigationItem(string tag)
         {
@@ -79,14 +73,14 @@ namespace oneKeyAi_win.Views
             }
         }
 
-        private void titleBar_PaneToggleRequested(TitleBar sender, object args)
+        private void TitleBar_PaneToggleRequested(TitleBar sender, object args)
         {
-
+            NavigationView.IsPaneOpen = !NavigationView.IsPaneOpen;
         }
 
-        private void titleBar_BackRequested(TitleBar sender, object args)
+        private void TitleBar_BackRequested(TitleBar sender, object args)
         {
-
+            NavigationViewFrame.GoBack();
         }
     }
 }

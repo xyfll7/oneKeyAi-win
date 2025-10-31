@@ -20,13 +20,14 @@
         </Grid.RowDefinitions>
         <TitleBar 
                 Margin="2 4 0 0"
-                x:Name="titleBar"
+                x:Name="TitleBar"
                 Title="WinUI Gallery"
                 Subtitle="Preview"
                 IsBackButtonVisible="True"
+                IsBackButtonEnabled="{x:Bind NavigationViewFrame.CanGoBack, Mode=OneWay}"
                 IsPaneToggleButtonVisible="True"
-                BackRequested="titleBar_BackRequested"
-                PaneToggleRequested="titleBar_PaneToggleRequested" >
+                BackRequested="TitleBar_BackRequested"
+                PaneToggleRequested="TitleBar_PaneToggleRequested" >
             <TitleBar.IconSource>
                 <ImageIconSource ImageSource="/Assets/Logo.ico" />
             </TitleBar.IconSource>
