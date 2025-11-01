@@ -91,7 +91,7 @@ namespace oneKeyAi_win
 
                     if (reverseMap.TryGetValue(currentPageType, out string? pageTag) && pageTag != null)
                     {
-                        foreach (NavigationViewItemBase item in NavigationView.MenuItems)
+                        foreach (NavigationViewItemBase item in NavigationView.MenuItems.OfType<NavigationViewItemBase>())
                         {
                             if (item is NavigationViewItem navViewItem && navViewItem.Tag?.ToString() == pageTag)
                             {
