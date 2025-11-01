@@ -32,9 +32,7 @@ namespace oneKeyAi_win
             var appWindow = this.AppWindow;
             if (appWindow != null)
             {  
-                string iconPath = Path.Combine(AppContext.BaseDirectory, @"Assets\Logo.ico");
                 ExtendsContentIntoTitleBar = true;
-                appWindow.SetIcon(iconPath); 
             }
             
             // Initialize the ViewModel directly since Resources is not available in Window
