@@ -22,7 +22,6 @@
     <None Remove="Resources\TrayIconResources.xaml" />
     <None Remove="Views\HistoryPage.xaml" />
     <None Remove="Views\HomePage.xaml" />
-    <None Remove="Views\MainPage.xaml" />
     <None Remove="Views\SettingsPage.xaml" />
     <None Remove="Views\TestPage.xaml" />
   </ItemGroup>
@@ -71,11 +70,6 @@
   </ItemGroup>
   <ItemGroup>
     <Page Update="Views\HomePage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Update="Views\MainPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>

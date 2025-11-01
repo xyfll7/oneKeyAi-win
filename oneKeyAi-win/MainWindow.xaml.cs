@@ -1,8 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
@@ -10,6 +5,13 @@ using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
+using oneKeyAi_win.ViewModels;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Resources;
+using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 
@@ -23,15 +25,97 @@ namespace oneKeyAi_win
     /// </summary>
     public sealed partial class MainWindow : Window
     {
+        private readonly MainPageViewModel? _viewModel;
         public MainWindow()
         {
             InitializeComponent();
             var appWindow = this.AppWindow;
             if (appWindow != null)
-            {
+            {  
                 string iconPath = Path.Combine(AppContext.BaseDirectory, @"Assets\Logo.ico");
                 ExtendsContentIntoTitleBar = true;
-                appWindow.SetIcon(iconPath);
+                appWindow.SetIcon(iconPath); 
+            }
+            
+            // Initialize the ViewModel directly since Resources is not available in Window
+            _viewModel = new MainPageViewModel();
+
+            NavigationView.ItemInvoked += OnNavigationViewItemInvoked;
+           
+            NavigationViewFrame.Navigated += (_, _) => OnFrameNavigated();
+
+            NavigateToPage("Home"); 
+            OnFrameNavigated();
+        }
+        private void OnNavigationViewItemInvoked(NavigationView sender, NavigationViewItemInvokedEventArgs args)
+        {
+            if (args.IsSettingsInvoked)
+            {
+                NavigateToPage("Settings");
+            }
+            else if (args.InvokedItemContainer is NavigationViewItem navItem)
+            {
+                string? navItemTag = navItem.Tag?.ToString();
+                if (!string.IsNullOrEmpty(navItemTag))
+                {
+                    NavigateToPage(navItemTag);
+                }
+            }
+        }
+
+        public void NavigateToPage(string pageTag)
+        {
+            var pageType = _viewModel?.GetPageTypeForTag(pageTag);
+            if (pageType != null)
+            {
+                if (NavigationViewFrame.Content != null && NavigationViewFrame.Content.GetType() == pageType)
+                {
+                    return;
+                }
+
+                NavigationViewFrame.Navigate(pageType);
+            }
+        }
+
+        private void OnFrameNavigated()
+        {
+            if (NavigationViewFrame.Content != null)
+            {
+                Type currentPageType = NavigationViewFrame.Content.GetType();
+                var pagesMap = _viewModel?.GetPagesMap();
+                if (pagesMap != null)
+                {
+                    var reverseMap = new Dictionary<Type, string>();
+                    foreach (var kvp in pagesMap)
+                    {
+                        reverseMap[kvp.Value] = kvp.Key;
+                    }
+
+                    if (reverseMap.TryGetValue(currentPageType, out string? pageTag) && pageTag != null)
+                    {
+                        foreach (NavigationViewItemBase item in NavigationView.MenuItems)
+                        {
+                            if (item is NavigationViewItem navViewItem && navViewItem.Tag?.ToString() == pageTag)
+                            {
+                                NavigationView.SelectedItem = navViewItem;
+                                return;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        private void TitleBar_PaneToggleRequested(TitleBar sender, object args)
+        {
+            NavigationView.IsPaneOpen = !NavigationView.IsPaneOpen;
+        }
+
+        private void TitleBar_BackRequested(TitleBar sender, object args)
+        {
+            if (NavigationViewFrame.CanGoBack)
+            {
+                NavigationViewFrame.GoBack();
             }
         }
     }
