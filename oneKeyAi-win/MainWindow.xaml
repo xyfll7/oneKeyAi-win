@@ -21,7 +21,7 @@
                x:Name="TitleBar"
                Title="oneKey"
                Subtitle="Preview"
-               IsBackButtonVisible="True"
+               IsBackButtonVisible="{x:Bind NavigationViewFrame.CanGoBack, Mode=OneWay}"
                IsBackButtonEnabled="{x:Bind NavigationViewFrame.CanGoBack, Mode=OneWay}"
                IsPaneToggleButtonVisible="True"
                BackRequested="TitleBar_BackRequested"
@@ -30,55 +30,42 @@
                 <ImageIconSource ImageSource="/Assets/Logo.ico" />
             </TitleBar.IconSource>
         </TitleBar>
-        <NavigationView Grid.Row="1" 
-                       Height="Auto"
-                       Width="Auto"
-                       x:Name="NavigationView" 
-                       IsPaneToggleButtonVisible="False" 
-                       IsBackButtonVisible="Collapsed"
-                       IsBackEnabled="{x:Bind NavigationViewFrame.CanGoBack, Mode=OneWay}"
-                       PaneTitle="oneKey">
-            <NavigationView.Header>
-                <SymbolIcon Symbol="Setting"/>
-            </NavigationView.Header>
-            <NavigationView.HeaderTemplate>
-                <DataTemplate>
-                    <StackPanel Orientation="Horizontal" Spacing="8">
-                        <SymbolIcon Symbol="Setting"/>
-                        <TextBlock Text="122111sss" FontSize="20" FontWeight="Bold"/>
-                    </StackPanel>
-                </DataTemplate>
-            </NavigationView.HeaderTemplate>
-
-
+        <NavigationView 
+                    Grid.Row="1"
+                    x:Name="NavigationView" 
+                    IsPaneToggleButtonVisible="False" 
+                    IsBackButtonVisible="Collapsed"
+                    IsBackEnabled="{x:Bind NavigationViewFrame.CanGoBack, Mode=OneWay}"
+                    PaneTitle="oneKey">
+  
             <NavigationView.MenuItems>
                 <NavigationViewItem
-               x:Name="HomeItem"
-               Icon="Home"
-               Content="Home"
-               Tag="Home"
-               SelectsOnInvoked="True"/>
+                        x:Name="HomeItem"
+                        Icon="Home"
+                        Content="Home"
+                        Tag="Home"
+                        SelectsOnInvoked="True"/>
                 <NavigationViewItem
-               x:Name="HistoryItem"
-               Icon="Send"
-               Content="History"
-               Tag="History"
-               SelectsOnInvoked="True"/>
+                        x:Name="HistoryItem"
+                        Icon="Send"
+                        Content="History"
+                        Tag="History"
+                        SelectsOnInvoked="True"/>
                 <NavigationViewItem
-               x:Name="TestItem"
-               Icon="Attach"
-               Content="Test"
-               Tag="Test"
-               SelectsOnInvoked="True"/>
+                        x:Name="TestItem"
+                        Icon="Attach"
+                        Content="Test"
+                        Tag="Test"
+                        SelectsOnInvoked="True"/>
             </NavigationView.MenuItems>
             <NavigationView.PaneFooter>
                 <NavigationViewItem
-                      Content="©2025 xyf"
-                      Tag="Test"
-                      FontSize="10"
-                      SelectsOnInvoked="True"
-                      IsEnabled="False"
-                     />
+                        Content="©2025 xyf"
+                        Tag="Test"
+                        FontSize="10"
+                        SelectsOnInvoked="True"
+                        IsEnabled="False"
+                        />
             </NavigationView.PaneFooter>
 
             <NavigationView.Content>
