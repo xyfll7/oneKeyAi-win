@@ -16,7 +16,7 @@ namespace oneKeyAi_win.ViewModels
         private static async Task Test()
         {
             System.Diagnostics.Debug.WriteLine($"11111");
-            UserConfig CC = new UserConfig()
+            UserConfig CC = new ()
             {
                 Theme = "小王子",
                 Language = "en",

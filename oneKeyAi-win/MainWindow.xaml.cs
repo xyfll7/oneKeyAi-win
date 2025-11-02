@@ -1,3 +1,4 @@
+using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
@@ -29,12 +30,11 @@ namespace oneKeyAi_win
         public MainWindow()
         {
             InitializeComponent();
-            var appWindow = this.AppWindow;
-            if (appWindow != null)
-            {  
-                ExtendsContentIntoTitleBar = true;
-            }
-            
+            this.ExtendsContentIntoTitleBar = true;
+            this.SetTitleBar(TitleBar);
+            this.AppWindow.SetIcon("Assets/Logo.ico");
+            this.AppWindow.TitleBar.PreferredHeightOption = TitleBarHeightOption.Tall;
+
             // Initialize the ViewModel directly since Resources is not available in Window
             _viewModel = new MainPageViewModel();
 
