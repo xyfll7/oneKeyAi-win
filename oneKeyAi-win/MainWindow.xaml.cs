@@ -6,6 +6,7 @@ using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
+using oneKeyAi_win.Helpers;
 using oneKeyAi_win.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -114,6 +115,16 @@ namespace oneKeyAi_win
             if (NavigationViewFrame.CanGoBack)
             {
                 NavigationViewFrame.GoBack();
+            }
+        }
+
+        private void RootGrid_Loaded(object sender, RoutedEventArgs e)
+        {
+            WindowHelper.SetWindowMinSize(this, 640, 500);
+
+            if (sender is FrameworkElement rootGrid && rootGrid.XamlRoot is not null)
+            {
+                rootGrid.XamlRoot.Changed += (_,_) => WindowHelper.SetWindowMinSize(this, 640, 500);
             }
         }
     }

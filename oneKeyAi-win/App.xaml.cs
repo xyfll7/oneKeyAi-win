@@ -9,6 +9,7 @@ using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
 using Microsoft.UI.Xaml.Shapes;
 using oneKeyAi_win.Configuration;
+using oneKeyAi_win.Helpers;
 using oneKeyAi_win.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -64,6 +65,7 @@ namespace oneKeyAi_win
             if (_window == null)
             {
                 _window = new MainWindow();
+                WindowHelper.TrackWindow(_window);
                 _window.Closed += (sender, args) => _window = null;
                 _window.Activate();
             }
