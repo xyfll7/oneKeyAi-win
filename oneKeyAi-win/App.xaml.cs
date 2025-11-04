@@ -50,6 +50,7 @@ namespace oneKeyAi_win
         protected override void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
         {
             InitializeTrayIcon();
+            HotkeyHelper.RegisterGlobalHotkeys();
         }
 
         private void InitializeTrayIcon()
@@ -65,7 +66,6 @@ namespace oneKeyAi_win
             if (_window == null)
             {
                 _window = new MainWindow();
-                WindowHelper.TrackWindow(_window);
                 _window.Closed += (sender, args) => _window = null;
                 _window.Activate();
             }

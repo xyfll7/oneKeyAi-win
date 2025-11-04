@@ -31,10 +31,10 @@ namespace oneKeyAi_win
         public MainWindow()
         {
             InitializeComponent();
-            this.ExtendsContentIntoTitleBar = true;
+            //this.ExtendsContentIntoTitleBar = true;
             this.SetTitleBar(TitleBar);
             this.AppWindow.SetIcon("Assets/Logo.ico");
-            this.AppWindow.TitleBar.PreferredHeightOption = TitleBarHeightOption.Tall;
+            //this.AppWindow.TitleBar.PreferredHeightOption = TitleBarHeightOption.Tall;
 
             // Initialize the ViewModel directly since Resources is not available in Window
             _viewModel = new MainPageViewModel();
