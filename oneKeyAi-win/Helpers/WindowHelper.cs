@@ -10,10 +10,10 @@ namespace oneKeyAi_win.Helpers
 {
     class WindowHelper
     {
-        static public List<Window> ActiveWindows { get { return _activeWindows; } }
+        public static  List<Window> ActiveWindows { get { return _activeWindows; } }
 
-        static private readonly List<Window> _activeWindows = new ();
-        static public void TrackWindow(Window window)
+        private static readonly List<Window> _activeWindows = [];
+        public static  void TrackWindow(Window window)
         {
             window.Closed += (sender, args) =>
             {

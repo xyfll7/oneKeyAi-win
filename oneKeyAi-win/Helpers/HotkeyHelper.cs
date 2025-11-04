@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.System;
+using WindowsInput.Events;
 
 namespace oneKeyAi_win.Helpers
 {
@@ -34,9 +35,10 @@ namespace oneKeyAi_win.Helpers
                 System.Diagnostics.Debug.WriteLine("热键已被其他程序占用");
             }
         }
-        private static void OnIncrement(object? sender, HotkeyEventArgs e)
+        private static async void OnIncrement(object? sender, HotkeyEventArgs e)
         {
             System.Diagnostics.Debug.WriteLine("TODO: 增加逻辑");
+            await WindowsInput.Simulate.Events().ClickChord(KeyCode.Control, KeyCode.C).Wait(1000).Invoke();
             // TODO: 增加逻辑
             e.Handled = true;
         }

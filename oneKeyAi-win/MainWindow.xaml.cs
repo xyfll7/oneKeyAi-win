@@ -105,12 +105,12 @@ namespace oneKeyAi_win
             }
         }
 
-        private void TitleBar_PaneToggleRequested(TitleBar sender, object args)
+        private void TitleBar_PaneToggleRequested(TitleBar _, object __)
         {
             NavigationView.IsPaneOpen = !NavigationView.IsPaneOpen;
         }
 
-        private void TitleBar_BackRequested(TitleBar sender, object args)
+        private void TitleBar_BackRequested(TitleBar _, object __)
         {
             if (NavigationViewFrame.CanGoBack)
             {
@@ -118,7 +118,7 @@ namespace oneKeyAi_win
             }
         }
 
-        private void RootGrid_Loaded(object sender, RoutedEventArgs e)
+        private void RootGrid_Loaded(object sender, RoutedEventArgs _)
         {
             WindowHelper.SetWindowMinSize(this, 640, 500);
 
