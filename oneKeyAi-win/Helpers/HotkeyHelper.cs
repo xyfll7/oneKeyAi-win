@@ -3,9 +3,11 @@ using NHotkey;
 using NHotkey.WinUI;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.ApplicationModel.DataTransfer;
 using Windows.System;
 using WindowsInput.Events;
 
@@ -19,15 +21,9 @@ namespace oneKeyAi_win.Helpers
             {
                 HotkeyManager.Current.AddOrReplace(
                     "Increment",
-                    VirtualKey.Up,
-                    VirtualKeyModifiers.Control,
+                    VirtualKey.A,
+                    VirtualKeyModifiers.Control | VirtualKeyModifiers.Shift,
                     OnIncrement);
-
-                HotkeyManager.Current.AddOrReplace(
-                    "Decrement",
-                    VirtualKey.Down,
-                    VirtualKeyModifiers.Control,
-                    OnDecrement);
             }
             catch (HotkeyAlreadyRegisteredException)
             {
@@ -38,17 +34,10 @@ namespace oneKeyAi_win.Helpers
         private static async void OnIncrement(object? sender, HotkeyEventArgs e)
         {
             System.Diagnostics.Debug.WriteLine("TODO: 增加逻辑");
-            await WindowsInput.Simulate.Events().ClickChord(KeyCode.Control, KeyCode.C).Wait(1000).Invoke();
+    
             // TODO: 增加逻辑
+            ClipboardHelper.OneKey();
             e.Handled = true;
         }
-
-        private static void OnDecrement(object? sender, HotkeyEventArgs e)
-        {
-            System.Diagnostics.Debug.WriteLine("TODO: 减少逻辑");
-            // TODO: 减少逻辑
-            e.Handled = true;
-        }
-
     }
 }
