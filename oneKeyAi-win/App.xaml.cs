@@ -1,5 +1,6 @@
 ﻿using H.NotifyIcon;
 using H.NotifyIcon.Core;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
@@ -10,9 +11,11 @@ using Microsoft.UI.Xaml.Navigation;
 using Microsoft.UI.Xaml.Shapes;
 using oneKeyAi_win.Configuration;
 using oneKeyAi_win.Helpers;
+using oneKeyAi_win.Services;
 using oneKeyAi_win.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -33,7 +36,7 @@ namespace oneKeyAi_win
     public partial class App : Application
     {
         public Window? _window;
-
+        public static IServiceProvider? ServiceProvider { get; private set; }
         /// <summary>
         /// Initializes the singleton application object.  This is the first line of authored code
         /// executed, and as such is the logical equivalent of main() or WinMain().
@@ -41,6 +44,11 @@ namespace oneKeyAi_win
         public App()
         {
             InitializeComponent();
+            // 配置 DI 容器
+            var services = new ServiceCollection();
+            services.AddSingleton<OllamaService>();
+            ServiceProvider = services.BuildServiceProvider();
+            Debug.WriteLine("Ollama服务初始化");
         }
 
         /// <summary>

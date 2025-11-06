@@ -12,6 +12,7 @@
     <WinUISDKReferences>false</WinUISDKReferences>
     <EnableMsixTooling>true</EnableMsixTooling>
     <Nullable>enable</Nullable>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
     <Content Remove="Assets\favicon.png" />
@@ -50,6 +51,7 @@
   <ItemGroup>
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
     <PackageReference Include="H.NotifyIcon.WinUI" Version="2.3.2" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.10" />
     <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.26100.6901" />
     <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.8.251003001" />
     <PackageReference Include="NHotkey.WinUI" Version="3.0.1" />

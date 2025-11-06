@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Microsoft.Extensions.DependencyInjection;
+using oneKeyAi_win.Services;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -14,11 +16,29 @@ namespace oneKeyAi_win.Helpers
 
         public static async void OneKey()
         {
-            await WindowsInput.Simulate.Events().ClickChord(KeyCode.Control, KeyCode.C).Wait(200).Invoke();
+            await WindowsInput.Simulate.Events().Wait(1000).ClickChord(KeyCode.Control, KeyCode.C).Invoke();
+            await Task.Delay(200); // 等待 200 毫秒
             string? clipboardText = await GetClipboardTextAsync();
+            Debug.WriteLine($"剪切板内容11：{clipboardText}");
             if (!string.IsNullOrWhiteSpace(clipboardText))
             {
-                Debug.WriteLine($"剪切板内容：{clipboardText}");
+                var ollama = App.ServiceProvider?.GetRequiredService<OllamaService>();
+                if (ollama != null)
+                {
+                    try
+                    {
+                        var result = await ollama.GenerateAsync("deepseek-r1:8b", "你好");
+                        Debug.WriteLine($"剪切板内容：{clipboardText} {result?.Response ?? "No response"}");
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine($"调用Ollama服务失败: {ex.Message}");
+                    }
+                }
+                else
+                {
+                    Debug.WriteLine("Ollama服务未初始化");
+                }
             }
             else
             {

@@ -21,19 +21,19 @@ namespace oneKeyAi_win.Helpers
             {
                 HotkeyManager.Current.AddOrReplace(
                     "Increment",
-                    VirtualKey.A,
-                    VirtualKeyModifiers.Control | VirtualKeyModifiers.Shift,
+                    VirtualKey.Y,
+                    VirtualKeyModifiers.Control,
                     OnIncrement);
             }
             catch (HotkeyAlreadyRegisteredException)
             {
                 // 热键被占用
-                System.Diagnostics.Debug.WriteLine("热键已被其他程序占用");
+                Debug.WriteLine("热键已被其他程序占用");
             }
         }
         private static async void OnIncrement(object? sender, HotkeyEventArgs e)
         {
-            System.Diagnostics.Debug.WriteLine("TODO: 增加逻辑");
+            Debug.WriteLine("TODO: 增加逻辑");
     
             // TODO: 增加逻辑
             ClipboardHelper.OneKey();
