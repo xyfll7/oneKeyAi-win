@@ -32,7 +32,7 @@ namespace oneKeyAi_win.Services
             _baseUrl = baseUrl;
         }
 
-        public async Task<OllamaResponse> GenerateAsync(string model, string prompt)
+        public async Task<OllamaResponse> GenerateAsync(string model, bool think, string prompt)
         {
             if (string.IsNullOrWhiteSpace(model))
                 throw new ArgumentException("Model cannot be null or empty", nameof(model));
@@ -44,7 +44,8 @@ namespace oneKeyAi_win.Services
             {
                 Model = model,
                 Prompt = prompt,
-                Stream = false
+                Stream = false,
+                Think = think
             };
 
             var json = JsonSerializer.Serialize(request);
@@ -92,6 +93,7 @@ namespace oneKeyAi_win.Services
         public string? Model { get; set; }
         public string? Prompt { get; set; }
         public bool Stream { get; set; }
+        public bool Think { get; set; }
     }
 
     public class OllamaResponse

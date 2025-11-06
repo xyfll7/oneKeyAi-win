@@ -1,4 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Windows.AppNotifications;
+using Microsoft.Windows.AppNotifications.Builder;
 using oneKeyAi_win.Services;
 using System;
 using System.Collections.Generic;
@@ -19,7 +21,9 @@ namespace oneKeyAi_win.Helpers
             await WindowsInput.Simulate.Events().Wait(1000).ClickChord(KeyCode.Control, KeyCode.C).Invoke();
             await Task.Delay(200); // 等待 200 毫秒
             string? clipboardText = await GetClipboardTextAsync();
-            Debug.WriteLine($"剪切板内容11：{clipboardText}");
+
+            string prompt = $"{clipboardText}\n以上内容如果是中文则翻译成英文，如果是英文则翻译成中文";
+            Debug.WriteLine($"prompt: {prompt}");
             if (!string.IsNullOrWhiteSpace(clipboardText))
             {
                 var ollama = App.ServiceProvider?.GetRequiredService<OllamaService>();
@@ -27,8 +31,16 @@ namespace oneKeyAi_win.Helpers
                 {
                     try
                     {
-                        var result = await ollama.GenerateAsync("deepseek-r1:8b", "你好");
-                        Debug.WriteLine($"剪切板内容：{clipboardText} {result?.Response ?? "No response"}");
+                        var result = await ollama.GenerateAsync("deepseek-r1:8b", false, prompt);
+                        Debug.WriteLine($"翻译结果：\n {result?.Response ?? "No response"}");
+
+                        AppNotification notification = new AppNotificationBuilder()
+                        .AddText($"{clipboardText}")
+                        .AddText($"{result?.Response}")
+                        .BuildNotification();
+
+                        AppNotificationManager.Default.Show(notification);
+
                     }
                     catch (Exception ex)
                     {
