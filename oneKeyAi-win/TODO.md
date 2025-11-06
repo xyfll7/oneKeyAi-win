@@ -1,5 +1,5 @@
 ﻿
-### 查看git diff 并归纳总结一个 git commit 内容
+### Check the git diff and summarize the changes in a commit message.
 
 ### 加入快捷键
 
