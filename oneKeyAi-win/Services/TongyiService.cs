@@ -84,7 +84,6 @@ namespace oneKeyAi_win.Services
             _httpClient.DefaultRequestHeaders.Clear();
             _httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {_apiKey}");
             _httpClient.DefaultRequestHeaders.Add("User-Agent", "oneKeyAi-win");
-            _httpClient.DefaultRequestHeaders.Add("Content-Type", "application/json");
 
             HttpResponseMessage? response = null;
             try
@@ -145,7 +144,6 @@ namespace oneKeyAi_win.Services
             _httpClient.DefaultRequestHeaders.Clear();
             _httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {_apiKey}");
             _httpClient.DefaultRequestHeaders.Add("User-Agent", "oneKeyAi-win");
-            _httpClient.DefaultRequestHeaders.Add("Content-Type", "application/json");
 
             HttpResponseMessage? response = null;
             try
@@ -214,7 +212,6 @@ namespace oneKeyAi_win.Services
             _httpClient.DefaultRequestHeaders.Clear();
             _httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {_apiKey}");
             _httpClient.DefaultRequestHeaders.Add("User-Agent", "oneKeyAi-win");
-            _httpClient.DefaultRequestHeaders.Add("Content-Type", "application/json");
 
             HttpResponseMessage? response = null;
             try
