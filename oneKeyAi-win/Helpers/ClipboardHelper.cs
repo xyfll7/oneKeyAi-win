@@ -26,17 +26,17 @@ namespace oneKeyAi_win.Helpers
             Debug.WriteLine($"prompt: {prompt}");
             if (!string.IsNullOrWhiteSpace(clipboardText))
             {
-                var ollama = App.ServiceProvider?.GetRequiredService<OllamaService>();
-                if (ollama != null)
+                var modelService = App.ServiceProvider?.GetRequiredService<ILargeModelService>();
+                if (modelService != null)
                 {
                     try
                     {
-                        var result = await ollama.GenerateAsync("deepseek-r1:8b", false, prompt);
-                        Debug.WriteLine($"翻译结果：\n {result?.Response ?? "No response"}");
+                        var result = await modelService.GenerateTextAsync("gpt-3.5-turbo", "Hello!");
+                        Debug.WriteLine($"翻译结果：\n {result.ToString()}");
 
                         AppNotification notification = new AppNotificationBuilder()
                         .AddText($"{clipboardText}")
-                        .AddText($"{result?.Response}")
+                        //.AddText($"{result?.Response}")
                         .BuildNotification();
 
                         AppNotificationManager.Default.Show(notification);
@@ -44,12 +44,12 @@ namespace oneKeyAi_win.Helpers
                     }
                     catch (Exception ex)
                     {
-                        Debug.WriteLine($"调用Ollama服务失败: {ex.Message}");
+                        Debug.WriteLine($"调用服务失败: {ex.Message}");
                     }
                 }
                 else
                 {
-                    Debug.WriteLine("Ollama服务未初始化");
+                    Debug.WriteLine("服务未初始化");
                 }
             }
             else
