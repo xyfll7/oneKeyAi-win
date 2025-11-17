@@ -29,9 +29,20 @@ namespace oneKeyAi_win.Helpers
                 var modelService = App.ServiceProvider?.GetRequiredService<ILargeModelService>();
                 if (modelService != null)
                 {
+                    modelService.SetApiKey("sk-3ab003e0b90346e58d4072f402a15b13");
+                    // Check which specific service is being used
+                    if (modelService is SwitchableModelService switchableService)
+                    {
+                        Debug.WriteLine($"当前使用的模型提供商: {switchableService.GetCurrentProvider()}");
+                    }
+                    else
+                    {
+                        Debug.WriteLine($"使用的服务类型: {modelService.GetType().Name}");
+                    }
+
                     try
                     {
-                        var result = await modelService.GenerateTextAsync("gpt-3.5-turbo", "Hello!");
+                        var result = await modelService.GenerateTextAsync("qwen-plus", "Hello!");
                         Debug.WriteLine($"翻译结果：\n {result.ToString()}");
 
                         AppNotification notification = new AppNotificationBuilder()

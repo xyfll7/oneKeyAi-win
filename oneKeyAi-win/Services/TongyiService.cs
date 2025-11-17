@@ -17,13 +17,13 @@ namespace oneKeyAi_win.Services
 
         private readonly HttpClient _httpClient;
         private string _apiKey = "";
-        private string _baseUrl = "https://dashscope.aliyuncs.com/api/v1";
+        private string _baseUrl = "https://dashscope.aliyuncs.com/compatible-mode/v1";
 
-        public TongyiService() : this("", "https://dashscope.aliyuncs.com/api/v1")
+        public TongyiService() : this("", "https://dashscope.aliyuncs.com/compatible-mode/v1")
         {
         }
 
-        public TongyiService(string apiKey, string baseUrl = "https://dashscope.aliyuncs.com/api/v1")
+        public TongyiService(string apiKey, string baseUrl = "https://dashscope.aliyuncs.com/compatible-mode/v1")
         {
             _httpClient = new HttpClient
             {
@@ -51,29 +51,28 @@ namespace oneKeyAi_win.Services
             if (string.IsNullOrWhiteSpace(model))
                 throw new ArgumentException("Model cannot be null or empty", nameof(model));
 
-            var request = new TongyiRequest
-            {
-                Model = model,
-                Input = new TongyiInput(),
-                Parameters = new TongyiParameters
-                {
-                    Temperature = temperature,
-                    MaxTokens = maxTokens
-                }
-            };
-
-            // Add messages - if no messages provided, create from prompt
+            // Use OpenAI-compatible format for messages
+            List<TongyiMessage> messageList;
             if (messages != null && messages.Count > 0)
             {
-                request.Input.Messages = messages;
+                messageList = messages;
             }
             else
             {
-                request.Input.Messages = new List<TongyiMessage>
+                messageList = new List<TongyiMessage>
                 {
                     new TongyiMessage { Role = "user", Content = prompt }
                 };
             }
+
+            // Create a request compatible with OpenAI format
+            var request = new
+            {
+                model = model,
+                messages = messageList,
+                temperature = temperature,
+                max_tokens = maxTokens
+            };
 
             var json = JsonSerializer.Serialize(request, new JsonSerializerOptions
             {
@@ -90,7 +89,7 @@ namespace oneKeyAi_win.Services
             HttpResponseMessage? response = null;
             try
             {
-                var url = $"{_baseUrl}/services/aigc/text-generation/generation";
+                var url = $"{_baseUrl}/chat/completions"; // Use compatible mode endpoint
                 response = await _httpClient.PostAsync(url, content);
 
                 if (!response.IsSuccessStatusCode)
@@ -129,14 +128,11 @@ namespace oneKeyAi_win.Services
             if (texts == null || texts.Count == 0)
                 throw new ArgumentException("Texts cannot be null or empty", nameof(texts));
 
-            var request = new TongyiEmbeddingRequest
+            // Create a request compatible with OpenAI format
+            var request = new
             {
-                Model = model,
-                Input = new TongyiEmbeddingInput
-                {
-                    Texts = texts
-                },
-                Parameters = new TongyiEmbeddingParameters()
+                model = model,
+                input = texts
             };
 
             var json = JsonSerializer.Serialize(request, new JsonSerializerOptions
@@ -154,7 +150,7 @@ namespace oneKeyAi_win.Services
             HttpResponseMessage? response = null;
             try
             {
-                var url = $"{_baseUrl}/services/aigc/text-embedding/embedding";
+                var url = $"{_baseUrl}/embeddings"; // Use compatible mode endpoint
                 response = await _httpClient.PostAsync(url, content);
 
                 if (!response.IsSuccessStatusCode)
@@ -193,6 +189,7 @@ namespace oneKeyAi_win.Services
             if (string.IsNullOrWhiteSpace(prompt))
                 throw new ArgumentException("Prompt cannot be null or empty", nameof(prompt));
 
+            // For image synthesis, we might need to keep using the original API as it might not be available in compatible mode
             var request = new TongyiImageRequest
             {
                 Model = model,
@@ -222,7 +219,8 @@ namespace oneKeyAi_win.Services
             HttpResponseMessage? response = null;
             try
             {
-                var url = $"{_baseUrl}/services/aigc/text-to-image/image-synthesis";
+                // Using the original API for image synthesis as it might not support compatible mode
+                var url = $"{_baseUrl.Replace("/compatible-mode/v1", "/api/v1")}/services/aigc/text-to-image/image-synthesis";
                 response = await _httpClient.PostAsync(url, content);
 
                 if (!response.IsSuccessStatusCode)
