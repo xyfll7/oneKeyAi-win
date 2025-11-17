@@ -42,12 +42,15 @@ namespace oneKeyAi_win.Helpers
 
                     try
                     {
-                        var result = await modelService.GenerateTextAsync("qwen-plus", "Hello!");
-                        Debug.WriteLine($"翻译结果：\n {result.ToString()}");
+                        var result = await modelService.GenerateTextAsync("qwen-plus", prompt);
+
+                        // Extract the actual text content from the response
+                        string translatedText = ExtractResponseText(result);
+                        Debug.WriteLine($"翻译结果：\n {translatedText}");
 
                         AppNotification notification = new AppNotificationBuilder()
                         .AddText($"{clipboardText}")
-                        //.AddText($"{result?.Response}")
+                        .AddText($"{translatedText}")
                         .BuildNotification();
 
                         AppNotificationManager.Default.Show(notification);
@@ -87,6 +90,43 @@ namespace oneKeyAi_win.Helpers
             }
 
             return null;
+        }
+
+        /// <summary>
+        /// Extracts the actual text content from the response object
+        /// </summary>
+        private static string ExtractResponseText(object? response)
+        {
+            if (response == null)
+                return "No response received";
+
+            // Check if the response is a TongyiResponse
+            if (response is TongyiResponse tongyiResponse)
+            {
+                // Try to get text from Output.Text first
+                if (!string.IsNullOrEmpty(tongyiResponse.Output?.Text))
+                {
+                    return tongyiResponse.Output.Text;
+                }
+
+                // If not found, try to get from Choices
+                if (tongyiResponse.Output?.Choices != null && tongyiResponse.Output.Choices.Count > 0)
+                {
+                    foreach (var choice in tongyiResponse.Output.Choices)
+                    {
+                        if (choice.Message?.Content != null)
+                        {
+                            return choice.Message.Content;
+                        }
+                    }
+                }
+
+                // If still not found, return the original response
+                return "No text content found in response";
+            }
+
+            // Fallback to ToString() if response is not a TongyiResponse
+            return response.ToString() ?? "No response content";
         }
     }
 }
