@@ -12,6 +12,8 @@ This directory contains HTTP request classes for various large language model pr
 - **OllamaService**: For local Ollama models
 - **TongyiService**: For Tongyi/Qwen (通义千问) models from Alibaba Cloud
 - **LargeModelServiceFactory**: Factory to get service instances
+- **SwitchableModelService**: Switchable service for runtime switching between providers
+- **ILargeModelService**: Common interface for all AI services
 
 ## Usage Examples
 
@@ -26,6 +28,39 @@ var tongyiService = LargeModelServiceFactory.GetService(ModelProvider.Tongyi) as
 // Or get the concrete service directly
 var ollamaService = LargeModelServiceFactory.GetConcreteService<OllamaService>();
 var tongyiService = LargeModelServiceFactory.GetConcreteService<TongyiService>();
+```
+
+### Dependency Injection with Switchable Service
+
+The application is configured to use dependency injection with a switchable service that allows runtime switching:
+
+```csharp
+// Get the service from DI container
+var modelService = App.ServiceProvider?.GetRequiredService<ILargeModelService>();
+
+if (modelService is SwitchableModelService switchableService)
+{
+    // Initially using OpenAI (the default)
+    Console.WriteLine($"Current provider: {switchableService.GetCurrentProvider()}");
+
+    // Set API key for OpenAI
+    switchableService.SetApiKey("your-openai-api-key");
+
+    var openAiResult = await modelService.GenerateTextAsync("gpt-3.5-turbo", "Hello, world!");
+
+    // Switch to Ollama at runtime
+    switchableService.SwitchProvider(ModelProvider.Ollama);
+    Console.WriteLine($"Switched to provider: {switchableService.GetCurrentProvider()}");
+
+    // No API key needed for Ollama (typically runs locally)
+    var ollamaResult = await modelService.GenerateTextAsync("llama2", "Hello, from Ollama!");
+
+    // Switch to Google AI
+    switchableService.SwitchProvider(ModelProvider.GoogleAI);
+    switchableService.SetApiKey("your-google-api-key");
+
+    var googleResult = await modelService.GenerateTextAsync("gemini-pro", "Hello, from Google!");
+}
 ```
 
 ### Direct Service Usage

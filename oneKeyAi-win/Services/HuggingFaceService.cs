@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace oneKeyAi_win.Services
 {
-    public sealed partial class HuggingFaceService : IDisposable
+    public sealed partial class HuggingFaceService : ILargeModelService, IDisposable
     {
         private static readonly Lazy<HuggingFaceService> _instance =
             new(() => new HuggingFaceService());
@@ -245,6 +245,11 @@ namespace oneKeyAi_win.Services
             {
                 response?.Dispose();
             }
+        }
+
+        public async Task<object> GenerateTextAsync(string model, string prompt, double temperature = 0.7, int maxTokens = 1000)
+        {
+            return await TextGenerationAsync(model, prompt, temperature, maxTokens);
         }
 
         public void Dispose()

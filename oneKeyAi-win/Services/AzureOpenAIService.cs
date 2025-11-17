@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace oneKeyAi_win.Services
 {
-    public sealed partial class AzureOpenAIService : IDisposable
+    public sealed partial class AzureOpenAIService : ILargeModelService, IDisposable
     {
         private static readonly Lazy<AzureOpenAIService> _instance =
             new(() => new AzureOpenAIService());
@@ -168,6 +168,15 @@ namespace oneKeyAi_win.Services
             {
                 response?.Dispose();
             }
+        }
+
+        public async Task<object> GenerateTextAsync(string model, string prompt, double temperature = 0.7, int maxTokens = 1000)
+        {
+            var messages = new List<Message>
+            {
+                new Message { Role = "user", Content = prompt }
+            };
+            return await ChatCompletionsAsync(messages, temperature, maxTokens);
         }
 
         public void Dispose()

@@ -44,6 +44,26 @@ namespace oneKeyAi_win
         public App()
         {
             InitializeComponent();
+            ConfigureServices();
+        }
+
+        private void ConfigureServices()
+        {
+            var services = new ServiceCollection();
+
+            // Register the switchable model service as a singleton
+            services.AddSingleton<ILargeModelService, SwitchableModelService>();
+
+            // Register other services as singletons if needed
+            services.AddSingleton<OpenAIService>(provider => OpenAIService.Instance);
+            services.AddSingleton<AzureOpenAIService>(provider => AzureOpenAIService.Instance);
+            services.AddSingleton<GoogleAIService>(provider => GoogleAIService.Instance);
+            services.AddSingleton<AnthropicService>(provider => AnthropicService.Instance);
+            services.AddSingleton<HuggingFaceService>(provider => HuggingFaceService.Instance);
+            services.AddSingleton<OllamaService>(provider => OllamaService.Instance);
+            services.AddSingleton<TongyiService>(provider => TongyiService.Instance);
+
+            ServiceProvider = services.BuildServiceProvider();
         }
 
         /// <summary>

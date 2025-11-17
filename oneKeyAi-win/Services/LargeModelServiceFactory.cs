@@ -4,7 +4,7 @@ namespace oneKeyAi_win.Services
 {
     public static class LargeModelServiceFactory
     {
-        public static object GetService(ModelProvider provider)
+        public static ILargeModelService GetService(ModelProvider provider)
         {
             return provider switch
             {

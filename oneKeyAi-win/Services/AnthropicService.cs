@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace oneKeyAi_win.Services
 {
-    public sealed partial class AnthropicService : IDisposable
+    public sealed partial class AnthropicService : ILargeModelService, IDisposable
     {
         private static readonly Lazy<AnthropicService> _instance =
             new(() => new AnthropicService());
@@ -173,6 +173,11 @@ namespace oneKeyAi_win.Services
             {
                 response?.Dispose();
             }
+        }
+
+        public async Task<object> GenerateTextAsync(string model, string prompt, double temperature = 0.7, int maxTokens = 1000)
+        {
+            return await MessagesAsync(model, prompt, null, temperature, maxTokens);
         }
 
         public void Dispose()

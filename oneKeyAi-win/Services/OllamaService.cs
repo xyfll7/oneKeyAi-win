@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace oneKeyAi_win.Services
 {
-    public sealed partial class OllamaService : IDisposable
+    public sealed partial class OllamaService : ILargeModelService, IDisposable
     {
         private static readonly Lazy<OllamaService> _instance =
             new(() => new OllamaService("http://127.0.0.1:11434")); // Create singleton with default URL
@@ -94,6 +94,12 @@ namespace oneKeyAi_win.Services
             // This would require a different architecture to support changing the base URL after instantiation
             // For now, this method can be left empty or throw an exception
             throw new NotImplementedException("Changing base URL after instantiation is not supported in OllamaService. Create a new instance with the desired base URL.");
+        }
+
+        public async Task<object> GenerateTextAsync(string model, string prompt, double temperature = 0.7, int maxTokens = 1000)
+        {
+            // Ollama doesn't use temperature and maxTokens in the same way, so we'll ignore these parameters
+            return await GenerateAsync(model, false, prompt);
         }
 
         public void Dispose()

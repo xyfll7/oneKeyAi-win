@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace oneKeyAi_win.Services
 {
-    public sealed partial class GoogleAIService : IDisposable
+    public sealed partial class GoogleAIService : ILargeModelService, IDisposable
     {
         private static readonly Lazy<GoogleAIService> _instance =
             new(() => new GoogleAIService());
@@ -177,6 +177,11 @@ namespace oneKeyAi_win.Services
             {
                 response?.Dispose();
             }
+        }
+
+        public async Task<object> GenerateTextAsync(string model, string prompt, double temperature = 0.7, int maxTokens = 1000)
+        {
+            return await GenerateContentAsync(model, prompt, temperature, maxTokens);
         }
 
         public void Dispose()
