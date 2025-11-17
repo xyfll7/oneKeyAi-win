@@ -81,6 +81,21 @@ namespace oneKeyAi_win.Services
             }
         }
 
+        public void SetApiKey(string apiKey)
+        {
+            // Ollama doesn't use API keys by default, so this method can be left empty
+            // Or you could implement custom behavior if needed
+        }
+
+        public void SetBaseUrl(string baseUrl)
+        {
+            // For OllamaService, we would need to recreate the HttpClient with the new base URL
+            // Since _baseUrl is readonly, we can't change it after construction
+            // This would require a different architecture to support changing the base URL after instantiation
+            // For now, this method can be left empty or throw an exception
+            throw new NotImplementedException("Changing base URL after instantiation is not supported in OllamaService. Create a new instance with the desired base URL.");
+        }
+
         public void Dispose()
         {
             _httpClient?.Dispose();

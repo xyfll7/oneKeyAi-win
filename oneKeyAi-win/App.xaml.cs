@@ -44,11 +44,6 @@ namespace oneKeyAi_win
         public App()
         {
             InitializeComponent();
-            // 配置 DI 容器
-            var services = new ServiceCollection();
-            services.AddSingleton<OllamaService>();
-            ServiceProvider = services.BuildServiceProvider();
-            Debug.WriteLine("Ollama服务初始化");
         }
 
         /// <summary>
