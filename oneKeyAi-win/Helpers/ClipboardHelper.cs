@@ -103,16 +103,28 @@ namespace oneKeyAi_win.Helpers
             // Check if the response is a TongyiResponse
             if (response is TongyiResponse tongyiResponse)
             {
-                // Try to get text from Output.Text first
+                // Try to get text from Output.Text first (original Tongyi format)
                 if (!string.IsNullOrEmpty(tongyiResponse.Output?.Text))
                 {
                     return tongyiResponse.Output.Text;
                 }
 
-                // If not found, try to get from Choices
+                // Check for choices in the original Tongyi format
                 if (tongyiResponse.Output?.Choices != null && tongyiResponse.Output.Choices.Count > 0)
                 {
                     foreach (var choice in tongyiResponse.Output.Choices)
+                    {
+                        if (choice.Message?.Content != null)
+                        {
+                            return choice.Message.Content;
+                        }
+                    }
+                }
+
+                // Check for choices in Tongyi-compatible format
+                if (tongyiResponse.Choices != null && tongyiResponse.Choices.Count > 0)
+                {
+                    foreach (var choice in tongyiResponse.Choices)
                     {
                         if (choice.Message?.Content != null)
                         {

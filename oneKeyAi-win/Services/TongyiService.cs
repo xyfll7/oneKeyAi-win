@@ -271,7 +271,9 @@ namespace oneKeyAi_win.Services
 
     public class TongyiMessage
     {
+        [JsonPropertyName("role")]
         public string Role { get; set; } = string.Empty; // "system", "user", "assistant"
+        [JsonPropertyName("content")]
         public string Content { get; set; } = string.Empty;
     }
 
@@ -337,6 +339,22 @@ namespace oneKeyAi_win.Services
 
         [JsonPropertyName("message")]
         public string? Message { get; set; }
+
+        // Properties for OpenAI-compatible format
+        [JsonPropertyName("choices")]
+        public List<OpenAIChoice>? Choices { get; set; }
+
+        [JsonPropertyName("object")]
+        public string? Object { get; set; }
+
+        [JsonPropertyName("created")]
+        public long Created { get; set; }
+
+        [JsonPropertyName("model")]
+        public string? Model { get; set; }
+
+        [JsonPropertyName("id")]
+        public string? Id { get; set; }
     }
 
     public class TongyiOutput
@@ -361,6 +379,22 @@ namespace oneKeyAi_win.Services
 
         [JsonPropertyName("finish_reason")]
         public string? FinishReason { get; set; }
+    }
+
+    // Class for OpenAI-compatible choice format
+    public class OpenAIChoice
+    {
+        [JsonPropertyName("message")]
+        public TongyiMessage? Message { get; set; }
+
+        [JsonPropertyName("finish_reason")]
+        public string? FinishReason { get; set; }
+
+        [JsonPropertyName("index")]
+        public int Index { get; set; }
+
+        [JsonPropertyName("logprobs")]
+        public object? Logprobs { get; set; }
     }
 
     public class TongyiEmbedding
