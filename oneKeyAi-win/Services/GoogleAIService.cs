@@ -179,7 +179,7 @@ namespace oneKeyAi_win.Services
             }
         }
 
-        public async Task<object> GenerateTextAsync(string model, string prompt, double temperature = 0.7, int maxTokens = 1000)
+        public async Task<object> GenerateTextAsync(string model, string prompt, double temperature = 0.7, int maxTokens = 10000)
         {
             return await GenerateContentAsync(model, prompt, temperature, maxTokens);
         }
@@ -200,11 +200,15 @@ namespace oneKeyAi_win.Services
 
     public class Content
     {
+        [JsonPropertyName("parts")]
         public List<Part>? Parts { get; set; }
+        [JsonPropertyName("role")]
+        public string? Role { get; set; }  // 添加这个属性
     }
 
     public class Part
     {
+        [JsonPropertyName("text")]
         public string? Text { get; set; }
     }
 
@@ -229,6 +233,15 @@ namespace oneKeyAi_win.Services
 
         [JsonPropertyName("promptFeedback")]
         public PromptFeedback? PromptFeedback { get; set; }
+
+        [JsonPropertyName("usageMetadata")]
+        public UsageMetadata? UsageMetadata { get; set; }
+
+        [JsonPropertyName("modelVersion")]
+        public string? ModelVersion { get; set; }
+
+        [JsonPropertyName("responseId")]
+        public string? ResponseId { get; set; }
     }
 
     public class Candidate
@@ -238,6 +251,9 @@ namespace oneKeyAi_win.Services
 
         [JsonPropertyName("finishReason")]
         public string? FinishReason { get; set; }
+
+        [JsonPropertyName("index")]
+        public int? Index { get; set; }
 
         [JsonPropertyName("safetyRatings")]
         public List<SafetyRating>? SafetyRatings { get; set; }
@@ -268,6 +284,33 @@ namespace oneKeyAi_win.Services
     {
         [JsonPropertyName("citations")]
         public List<Citation>? Citations { get; set; }
+    }
+
+    public class UsageMetadata
+    {
+        [JsonPropertyName("promptTokenCount")]
+        public int? PromptTokenCount { get; set; }
+
+        [JsonPropertyName("candidatesTokenCount")]
+        public int? CandidatesTokenCount { get; set; }
+
+        [JsonPropertyName("totalTokenCount")]
+        public int? TotalTokenCount { get; set; }
+
+        [JsonPropertyName("promptTokensDetails")]
+        public List<PromptTokenDetails>? PromptTokensDetails { get; set; }
+
+        [JsonPropertyName("thoughtsTokenCount")]
+        public int? ThoughtsTokenCount { get; set; }
+    }
+
+    public class PromptTokenDetails
+    {
+        [JsonPropertyName("modality")]
+        public string? Modality { get; set; }
+
+        [JsonPropertyName("tokenCount")]
+        public int? TokenCount { get; set; }
     }
 
     public class Citation

@@ -29,10 +29,12 @@ namespace oneKeyAi_win.Helpers
                 var modelService = App.ServiceProvider?.GetRequiredService<ILargeModelService>();
                 if (modelService != null)
                 {
-             
+                    SwitchableModelService? switchableService = null;
+
                     // Check which specific service is being used
-                    if (modelService is SwitchableModelService switchableService)
+                    if (modelService is SwitchableModelService svc)
                     {
+                        switchableService = svc;
                         Debug.WriteLine($"当前使用的模型提供商: {switchableService.GetCurrentProvider()}");
                     }
                     else
@@ -42,7 +44,9 @@ namespace oneKeyAi_win.Helpers
 
                     try
                     {
-                        var result = await modelService.GenerateTextAsync("qwen-plus", prompt);
+                        // 根据当前模型提供商选择相应的模型名称
+                        string modelName = GetModelNameForProvider(switchableService?.GetCurrentProvider());
+                        var result = await modelService.GenerateTextAsync(modelName, prompt);
 
                         // Extract the actual text content from the response
                         string translatedText = ExtractResponseText(result);
@@ -139,6 +143,24 @@ namespace oneKeyAi_win.Helpers
 
             // Fallback to ToString() if response is not a TongyiResponse
             return response.ToString() ?? "No response content";
+        }
+
+        /// <summary>
+        /// 根据模型提供商返回相应的模型名称
+        /// </summary>
+        private static string GetModelNameForProvider(ModelProvider? provider)
+        {
+            return provider switch
+            {
+                ModelProvider.OpenAI => "gpt-3.5-turbo", // 或其他适当的OpenAI模型
+                ModelProvider.AzureOpenAI => "gpt-35-turbo", // Azure OpenAI模型名称
+                ModelProvider.GoogleAI => "gemini-2.5-pro", // Google AI模型名称
+                ModelProvider.Anthropic => "claude-3-opus-20240229", // Anthropic模型名称
+                ModelProvider.HuggingFace => "microsoft/DialoGPT-medium", // Hugging Face模型名称
+                ModelProvider.Ollama => "llama2", // Ollama模型名称
+                ModelProvider.Tongyi => "qwen-plus", // 通义千问模型名称
+                _ => "qwen-plus" // 默认使用通义千问
+            };
         }
     }
 }
