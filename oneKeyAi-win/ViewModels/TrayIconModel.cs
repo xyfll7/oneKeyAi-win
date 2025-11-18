@@ -13,12 +13,18 @@ namespace oneKeyAi_win.ViewModels
 {
     public partial class TrayIconModel : ObservableObject
     {
-        private readonly SwitchableModelService? _switchableModelService;
+        private readonly SwitchableModelService? modelService;
 
         public TrayIconModel()
         {
             // Get the switchable model service from the app's service provider
-            _switchableModelService = (App.ServiceProvider?.GetService(typeof(ILargeModelService)) as SwitchableModelService);
+            modelService = (App.ServiceProvider?.GetService(typeof(ILargeModelService)) as SwitchableModelService);
+
+            // Set the default API key for the default provider (Tongyi)
+            if (modelService != null)
+            {
+                modelService.SetApiKey("sk-3ab003e0b90346e58d4072f402a15b13");
+            }
 
             // Initialize the current model provider description
             OnPropertyChanged(nameof(CurrentModelProviderDescription));
@@ -28,11 +34,12 @@ namespace oneKeyAi_win.ViewModels
         {
             get
             {
-                if (_switchableModelService != null)
+                if (modelService != null)
                 {
-                    var currentProvider = _switchableModelService.GetCurrentProvider();
+                    var currentProvider = modelService.GetCurrentProvider();
                     return currentProvider.GetDescription();
                 }
+              
                 return ModelProvider.Tongyi.GetDescription(); // Default to Tongyi
             }
         }
@@ -81,9 +88,36 @@ namespace oneKeyAi_win.ViewModels
 
         private void SwitchProvider(ModelProvider provider)
         {
-            if (_switchableModelService != null)
+            if (modelService != null)
             {
-                _switchableModelService.SwitchProvider(provider);
+                modelService.SwitchProvider(provider);
+
+                // 根据provider类型设置对应的API密钥
+                switch (provider)
+                {
+                    case ModelProvider.OpenAI:
+                    case ModelProvider.AzureOpenAI:
+                    case ModelProvider.Ollama:
+                    case ModelProvider.Tongyi:
+                        // 为OpenAI、Azure OpenAI、Ollama、通义千问设置API密钥
+                        modelService.SetApiKey("sk-3ab003e0b90346e58d4072f402a15b13");
+                        break;
+                    case ModelProvider.GoogleAI:
+                        // 为Google AI设置API密钥
+                        modelService.SetApiKey("AIzaSyBSxB5hopBfj4Blms6Kf7l_lHyjN_EfAnc");
+                        break;
+                    case ModelProvider.Anthropic:
+                    case ModelProvider.HuggingFace:
+                        // 为Anthropic和Hugging Face设置API密钥
+                        // 可以替换为真实的API密钥
+                        modelService.SetApiKey("hf_YourHuggingFaceApiKey");
+                        break;
+                    default:
+                        // 默认API密钥
+                        modelService.SetApiKey("sk-3ab003e0b90346e58d4072f402a15b13");
+                        break;
+                }
+
                 OnPropertyChanged(nameof(CurrentModelProviderDescription));
             }
         }

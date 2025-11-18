@@ -29,7 +29,7 @@ namespace oneKeyAi_win.Helpers
                 var modelService = App.ServiceProvider?.GetRequiredService<ILargeModelService>();
                 if (modelService != null)
                 {
-                    modelService.SetApiKey("sk-3ab003e0b90346e58d4072f402a15b13");
+             
                     // Check which specific service is being used
                     if (modelService is SwitchableModelService switchableService)
                     {

@@ -6,7 +6,7 @@ namespace oneKeyAi_win.Services
     public class SwitchableModelService : ILargeModelService
     {
         private ModelProvider _currentProvider = ModelProvider.Tongyi;
-
+     
         public SwitchableModelService()
         {
         }
