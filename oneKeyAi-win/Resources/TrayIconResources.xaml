@@ -18,9 +18,7 @@
             <MenuFlyout>
                 <MenuFlyoutItem Command="{Binding Source={StaticResource TrayIconViewModel}, Path=TestCommand}" Text="Test"/>
                 <MenuFlyoutSeparator />
-                <MenuFlyoutItem Text="{Binding Source={StaticResource TrayIconViewModel}, Path=CurrentModelProviderDescription}" IsEnabled="False"/>
-                <MenuFlyoutSeparator />
-                <MenuFlyoutSubItem Text="Select Provider">
+                <MenuFlyoutSubItem Text="{Binding Source={StaticResource TrayIconViewModel}, Path=CurrentModelProviderDescription}">
                     <MenuFlyoutItem Command="{Binding Source={StaticResource TrayIconViewModel}, Path=SwitchToOpenAICommand}" Text="OpenAI"/>
                     <MenuFlyoutItem Command="{Binding Source={StaticResource TrayIconViewModel}, Path=SwitchToAzureOpenAICommand}" Text="Azure OpenAI"/>
                     <MenuFlyoutItem Command="{Binding Source={StaticResource TrayIconViewModel}, Path=SwitchToGoogleAICommand}" Text="Google AI"/>
