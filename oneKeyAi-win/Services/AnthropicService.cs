@@ -43,7 +43,7 @@ namespace oneKeyAi_win.Services
             _baseUrl = baseUrl;
         }
 
-        public async Task<AnthropicResponse> MessagesAsync(string model, string prompt, List<MessageBlock> messages = null, double temperature = 0.7, int maxTokens = 1000)
+        public async Task<AnthropicResponse> MessagesAsync(string model, string prompt, List<MessageBlock>? messages = null, double temperature = 0.7, int maxTokens = 1000)
         {
             if (string.IsNullOrWhiteSpace(_apiKey))
                 throw new InvalidOperationException("Anthropic API key is not set");
@@ -175,9 +175,48 @@ namespace oneKeyAi_win.Services
             }
         }
 
-        public async Task<object> GenerateTextAsync(string model, string prompt, double temperature = 0.7, int maxTokens = 1000)
+        public async Task<ITextResponse> GenerateTextAsync(string model, string prompt, double temperature = 0.7, int maxTokens = 1000)
         {
-            return await MessagesAsync(model, prompt, null, temperature, maxTokens);
+            var anthropicResponse = await MessagesAsync(model, prompt, null!, temperature, maxTokens);
+
+            // Extract the text content from the Anthropic response
+            string content = string.Empty;
+            if (anthropicResponse.Content != null)
+            {
+                foreach (var contentBlock in anthropicResponse.Content)
+                {
+                    if (!string.IsNullOrEmpty(contentBlock?.Text))
+                    {
+                        content = contentBlock.Text;
+                        break;
+                    }
+                }
+            }
+
+            // Create metadata dictionary with relevant information
+            var metadata = new Dictionary<string, object>();
+            if (anthropicResponse.Usage != null)
+            {
+                metadata["Usage"] = anthropicResponse.Usage;
+            }
+            if (!string.IsNullOrEmpty(anthropicResponse.Id))
+            {
+                metadata["Id"] = anthropicResponse.Id;
+            }
+            if (!string.IsNullOrEmpty(anthropicResponse.Model))
+            {
+                metadata["Model"] = anthropicResponse.Model;
+            }
+            if (!string.IsNullOrEmpty(anthropicResponse.Role))
+            {
+                metadata["Role"] = anthropicResponse.Role;
+            }
+
+            return new StandardTextResponse
+            {
+                Content = content,
+                Metadata = metadata
+            };
         }
 
         public void Dispose()

@@ -43,7 +43,7 @@ namespace oneKeyAi_win.Services
             _baseUrl = baseUrl;
         }
 
-        public async Task<OpenAIResponse> ChatCompletionsAsync(string model, string prompt, List<Message> messages = null, double temperature = 0.7, int maxTokens = 1000)
+        public async Task<OpenAIResponse> ChatCompletionsAsync(string model, string prompt, List<Message>? messages = null, double temperature = 0.7, int maxTokens = 1000)
         {
             if (string.IsNullOrWhiteSpace(_apiKey))
                 throw new InvalidOperationException("OpenAI API key is not set");
@@ -173,9 +173,44 @@ namespace oneKeyAi_win.Services
             }
         }
 
-        public async Task<object> GenerateTextAsync(string model, string prompt, double temperature = 0.7, int maxTokens = 1000)
+        public async Task<ITextResponse> GenerateTextAsync(string model, string prompt, double temperature = 0.7, int maxTokens = 1000)
         {
-            return await ChatCompletionsAsync(model, prompt, null, temperature, maxTokens);
+            var openaiResponse = await ChatCompletionsAsync(model, prompt, null!, temperature, maxTokens);
+
+            // Extract the text content from the OpenAI response
+            string content = string.Empty;
+            if (openaiResponse.Choices != null)
+            {
+                foreach (var choice in openaiResponse.Choices)
+                {
+                    if (!string.IsNullOrEmpty(choice?.Message?.Content))
+                    {
+                        content = choice.Message.Content;
+                        break;
+                    }
+                }
+            }
+
+            // Create metadata dictionary with relevant information
+            var metadata = new Dictionary<string, object>();
+            if (openaiResponse.Usage != null)
+            {
+                metadata["Usage"] = openaiResponse.Usage;
+            }
+            if (!string.IsNullOrEmpty(openaiResponse.Id))
+            {
+                metadata["Id"] = openaiResponse.Id;
+            }
+            if (!string.IsNullOrEmpty(openaiResponse.Model))
+            {
+                metadata["Model"] = openaiResponse.Model;
+            }
+
+            return new StandardTextResponse
+            {
+                Content = content,
+                Metadata = metadata
+            };
         }
 
         public void Dispose()

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Text;
 using System.Text.Json;
@@ -96,10 +97,35 @@ namespace oneKeyAi_win.Services
             throw new NotImplementedException("Changing base URL after instantiation is not supported in OllamaService. Create a new instance with the desired base URL.");
         }
 
-        public async Task<object> GenerateTextAsync(string model, string prompt, double temperature = 0.7, int maxTokens = 1000)
+        public async Task<ITextResponse> GenerateTextAsync(string model, string prompt, double temperature = 0.7, int maxTokens = 1000)
         {
             // Ollama doesn't use temperature and maxTokens in the same way, so we'll ignore these parameters
-            return await GenerateAsync(model, false, prompt);
+            var ollamaResponse = await GenerateAsync(model, false, prompt);
+
+            // Extract the text content from the Ollama response
+            string content = ollamaResponse.Response ?? string.Empty;
+
+            // Create metadata dictionary with relevant information
+            var metadata = new Dictionary<string, object>();
+            if (!string.IsNullOrEmpty(ollamaResponse.Model))
+            {
+                metadata["Model"] = ollamaResponse.Model;
+            }
+            if (!string.IsNullOrEmpty(ollamaResponse.CreatedAt))
+            {
+                metadata["CreatedAt"] = ollamaResponse.CreatedAt;
+            }
+            metadata["Done"] = ollamaResponse.Done;
+            if (!string.IsNullOrEmpty(ollamaResponse.DoneReason))
+            {
+                metadata["DoneReason"] = ollamaResponse.DoneReason;
+            }
+
+            return new StandardTextResponse
+            {
+                Content = content,
+                Metadata = metadata
+            };
         }
 
         public void Dispose()

@@ -48,8 +48,8 @@ namespace oneKeyAi_win.Helpers
                         string modelName = GetModelNameForProvider(switchableService?.GetCurrentProvider());
                         var result = await modelService.GenerateTextAsync(modelName, prompt);
 
-                        // Extract the actual text content from the response
-                        string translatedText = ExtractResponseText(result);
+                        // The result is now a standardized ITextResponse, so we can directly access the Content
+                        string translatedText = result.Content;
                         Debug.WriteLine($"翻译结果：\n {translatedText}");
 
                         AppNotification notification = new AppNotificationBuilder()
@@ -96,54 +96,6 @@ namespace oneKeyAi_win.Helpers
             return null;
         }
 
-        /// <summary>
-        /// Extracts the actual text content from the response object
-        /// </summary>
-        private static string ExtractResponseText(object? response)
-        {
-            if (response == null)
-                return "No response received";
-
-            // Check if the response is a TongyiResponse
-            if (response is TongyiResponse tongyiResponse)
-            {
-                // Try to get text from Output.Text first (original Tongyi format)
-                if (!string.IsNullOrEmpty(tongyiResponse.Output?.Text))
-                {
-                    return tongyiResponse.Output.Text;
-                }
-
-                // Check for choices in the original Tongyi format
-                if (tongyiResponse.Output?.Choices != null && tongyiResponse.Output.Choices.Count > 0)
-                {
-                    foreach (var choice in tongyiResponse.Output.Choices)
-                    {
-                        if (choice.Message?.Content != null)
-                        {
-                            return choice.Message.Content;
-                        }
-                    }
-                }
-
-                // Check for choices in Tongyi-compatible format
-                if (tongyiResponse.Choices != null && tongyiResponse.Choices.Count > 0)
-                {
-                    foreach (var choice in tongyiResponse.Choices)
-                    {
-                        if (choice.Message?.Content != null)
-                        {
-                            return choice.Message.Content;
-                        }
-                    }
-                }
-
-                // If still not found, return the original response
-                return "No text content found in response";
-            }
-
-            // Fallback to ToString() if response is not a TongyiResponse
-            return response.ToString() ?? "No response content";
-        }
 
         /// <summary>
         /// 根据模型提供商返回相应的模型名称
@@ -154,7 +106,7 @@ namespace oneKeyAi_win.Helpers
             {
                 ModelProvider.OpenAI => "gpt-3.5-turbo", // 或其他适当的OpenAI模型
                 ModelProvider.AzureOpenAI => "gpt-35-turbo", // Azure OpenAI模型名称
-                ModelProvider.GoogleAI => "gemini-2.5-pro", // Google AI模型名称
+                ModelProvider.GoogleAI => "gemini-2.5-flash", // Google AI模型名称
                 ModelProvider.Anthropic => "claude-3-opus-20240229", // Anthropic模型名称
                 ModelProvider.HuggingFace => "microsoft/DialoGPT-medium", // Hugging Face模型名称
                 ModelProvider.Ollama => "llama2", // Ollama模型名称

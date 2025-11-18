@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Text.Json;
@@ -247,9 +248,42 @@ namespace oneKeyAi_win.Services
             }
         }
 
-        public async Task<object> GenerateTextAsync(string model, string prompt, double temperature = 0.7, int maxTokens = 1000)
+        public async Task<ITextResponse> GenerateTextAsync(string model, string prompt, double temperature = 0.7, int maxTokens = 1000)
         {
-            return await TextGenerationAsync(model, prompt, temperature, maxTokens);
+            var huggingFaceResponses = await TextGenerationAsync(model, prompt, temperature, maxTokens);
+
+            // Extract the text content from the first Hugging Face response
+            string content = string.Empty;
+            HuggingFaceResponse? firstResponse = huggingFaceResponses?.FirstOrDefault();
+
+            if (firstResponse != null)
+            {
+                if (!string.IsNullOrEmpty(firstResponse.GeneratedText))
+                {
+                    content = firstResponse.GeneratedText;
+                }
+                else if (firstResponse.GeneratedTexts != null && firstResponse.GeneratedTexts.Count > 0)
+                {
+                    content = firstResponse.GeneratedTexts[0]; // Return first generated text
+                }
+                else if (!string.IsNullOrEmpty(firstResponse.Answer))
+                {
+                    content = firstResponse.Answer;
+                }
+            }
+
+            // Create metadata dictionary with relevant information
+            var metadata = new Dictionary<string, object>();
+            if (firstResponse?.Score.HasValue == true)
+            {
+                metadata["Score"] = firstResponse.Score.Value;
+            }
+
+            return new StandardTextResponse
+            {
+                Content = content,
+                Metadata = metadata
+            };
         }
 
         public void Dispose()

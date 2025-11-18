@@ -170,13 +170,48 @@ namespace oneKeyAi_win.Services
             }
         }
 
-        public async Task<object> GenerateTextAsync(string model, string prompt, double temperature = 0.7, int maxTokens = 1000)
+        public async Task<ITextResponse> GenerateTextAsync(string model, string prompt, double temperature = 0.7, int maxTokens = 1000)
         {
             var messages = new List<Message>
             {
                 new Message { Role = "user", Content = prompt }
             };
-            return await ChatCompletionsAsync(messages, temperature, maxTokens);
+            var azureResponse = await ChatCompletionsAsync(messages, temperature, maxTokens);
+
+            // Extract the text content from the Azure OpenAI response
+            string content = string.Empty;
+            if (azureResponse.Choices != null)
+            {
+                foreach (var choice in azureResponse.Choices)
+                {
+                    if (!string.IsNullOrEmpty(choice?.Message?.Content))
+                    {
+                        content = choice.Message.Content;
+                        break;
+                    }
+                }
+            }
+
+            // Create metadata dictionary with relevant information
+            var metadata = new Dictionary<string, object>();
+            if (azureResponse.Usage != null)
+            {
+                metadata["Usage"] = azureResponse.Usage;
+            }
+            if (!string.IsNullOrEmpty(azureResponse.Id))
+            {
+                metadata["Id"] = azureResponse.Id;
+            }
+            if (!string.IsNullOrEmpty(azureResponse.Model))
+            {
+                metadata["Model"] = azureResponse.Model;
+            }
+
+            return new StandardTextResponse
+            {
+                Content = content,
+                Metadata = metadata
+            };
         }
 
         public void Dispose()

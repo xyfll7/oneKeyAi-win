@@ -43,7 +43,7 @@ namespace oneKeyAi_win.Services
             _baseUrl = baseUrl;
         }
 
-        public async Task<TongyiResponse> ChatCompletionsAsync(string model, string prompt, List<TongyiMessage> messages = null, double temperature = 0.7, int maxTokens = 1000)
+        public async Task<TongyiResponse> ChatCompletionsAsync(string model, string prompt, List<TongyiMessage>? messages = null, double temperature = 0.7, int maxTokens = 1000)
         {
             if (string.IsNullOrWhiteSpace(_apiKey))
                 throw new InvalidOperationException("Tongyi API key is not set");
@@ -245,9 +245,63 @@ namespace oneKeyAi_win.Services
             }
         }
 
-        public async Task<object> GenerateTextAsync(string model, string prompt, double temperature = 0.7, int maxTokens = 1000)
+        public async Task<ITextResponse> GenerateTextAsync(string model, string prompt, double temperature = 0.7, int maxTokens = 1000)
         {
-            return await ChatCompletionsAsync(model, prompt, null, temperature, maxTokens);
+            var tongyiResponse = await ChatCompletionsAsync(model, prompt, null!, temperature, maxTokens);
+
+            // Extract the text content from the Tongyi response
+            string content = string.Empty;
+
+            // Try to get text from Output.Text first (original Tongyi format)
+            if (!string.IsNullOrEmpty(tongyiResponse.Output?.Text))
+            {
+                content = tongyiResponse.Output.Text;
+            }
+            // Check for choices in the original Tongyi format
+            else if (tongyiResponse.Output?.Choices != null)
+            {
+                foreach (var choice in tongyiResponse.Output.Choices)
+                {
+                    if (!string.IsNullOrEmpty(choice?.Message?.Content))
+                    {
+                        content = choice.Message.Content;
+                        break;
+                    }
+                }
+            }
+            // Check for choices in Tongyi-compatible format
+            else if (tongyiResponse.Choices != null)
+            {
+                foreach (var choice in tongyiResponse.Choices)
+                {
+                    if (!string.IsNullOrEmpty(choice?.Message?.Content))
+                    {
+                        content = choice.Message.Content;
+                        break;
+                    }
+                }
+            }
+
+            // Create metadata dictionary with relevant information
+            var metadata = new Dictionary<string, object>();
+            if (tongyiResponse.Usage != null)
+            {
+                metadata["Usage"] = tongyiResponse.Usage;
+            }
+            if (!string.IsNullOrEmpty(tongyiResponse.RequestId))
+            {
+                metadata["RequestId"] = tongyiResponse.RequestId;
+            }
+            if (!string.IsNullOrEmpty(tongyiResponse.Model))
+            {
+                metadata["Model"] = tongyiResponse.Model;
+            }
+
+            return new StandardTextResponse
+            {
+                Content = content,
+                Metadata = metadata
+            };
         }
 
         public void Dispose()

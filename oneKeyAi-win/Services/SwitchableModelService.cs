@@ -34,7 +34,7 @@ namespace oneKeyAi_win.Services
             }
         }
 
-        public async Task<object> GenerateTextAsync(string model, string prompt, double temperature = 0.7, int maxTokens = 1000)
+        public async Task<ITextResponse> GenerateTextAsync(string model, string prompt, double temperature = 0.7, int maxTokens = 1000)
         {
             var currentService = GetServiceForProvider(_currentProvider);
             return await currentService.GenerateTextAsync(model, prompt, temperature, maxTokens);

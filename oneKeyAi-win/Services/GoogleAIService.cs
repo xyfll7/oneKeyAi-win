@@ -179,9 +179,52 @@ namespace oneKeyAi_win.Services
             }
         }
 
-        public async Task<object> GenerateTextAsync(string model, string prompt, double temperature = 0.7, int maxTokens = 10000)
+        public async Task<ITextResponse> GenerateTextAsync(string model, string prompt, double temperature = 0.7, int maxTokens = 1000)
         {
-            return await GenerateContentAsync(model, prompt, temperature, maxTokens);
+            var googleResponse = await GenerateContentAsync(model, prompt, temperature, maxTokens);
+
+            // Extract the text content from the Google AI response
+            string content = string.Empty;
+            if (googleResponse.Candidates != null)
+            {
+                foreach (var candidate in googleResponse.Candidates)
+                {
+                    if (candidate?.Content?.Parts != null)
+                    {
+                        foreach (var part in candidate.Content.Parts)
+                        {
+                            if (!string.IsNullOrEmpty(part?.Text))
+                            {
+                                content = part.Text;
+                                break;
+                            }
+                        }
+                        if (!string.IsNullOrEmpty(content))
+                            break;
+                    }
+                }
+            }
+
+            // Create metadata dictionary with relevant information
+            var metadata = new Dictionary<string, object>();
+            if (googleResponse.UsageMetadata != null)
+            {
+                metadata["UsageMetadata"] = googleResponse.UsageMetadata;
+            }
+            if (!string.IsNullOrEmpty(googleResponse.ModelVersion))
+            {
+                metadata["ModelVersion"] = googleResponse.ModelVersion;
+            }
+            if (!string.IsNullOrEmpty(googleResponse.ResponseId))
+            {
+                metadata["ResponseId"] = googleResponse.ResponseId;
+            }
+
+            return new StandardTextResponse
+            {
+                Content = content,
+                Metadata = metadata
+            };
         }
 
         public void Dispose()
