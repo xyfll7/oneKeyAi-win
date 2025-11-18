@@ -3,6 +3,7 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:tb="using:H.NotifyIcon"
+    xmlns:services="using:oneKeyAi_win.Services"
     >
     <tb:TaskbarIcon
         x:Key="TrayIcon"
@@ -16,6 +17,18 @@
         <tb:TaskbarIcon.ContextFlyout>
             <MenuFlyout>
                 <MenuFlyoutItem Command="{Binding Source={StaticResource TrayIconViewModel}, Path=TestCommand}" Text="Test"/>
+                <MenuFlyoutSeparator />
+                <MenuFlyoutItem Text="{Binding Source={StaticResource TrayIconViewModel}, Path=CurrentModelProviderDescription}" IsEnabled="False"/>
+                <MenuFlyoutSeparator />
+                <MenuFlyoutSubItem Text="Select Provider">
+                    <MenuFlyoutItem Command="{Binding Source={StaticResource TrayIconViewModel}, Path=SwitchToOpenAICommand}" Text="OpenAI"/>
+                    <MenuFlyoutItem Command="{Binding Source={StaticResource TrayIconViewModel}, Path=SwitchToAzureOpenAICommand}" Text="Azure OpenAI"/>
+                    <MenuFlyoutItem Command="{Binding Source={StaticResource TrayIconViewModel}, Path=SwitchToGoogleAICommand}" Text="Google AI"/>
+                    <MenuFlyoutItem Command="{Binding Source={StaticResource TrayIconViewModel}, Path=SwitchToAnthropicCommand}" Text="Anthropic"/>
+                    <MenuFlyoutItem Command="{Binding Source={StaticResource TrayIconViewModel}, Path=SwitchToHuggingFaceCommand}" Text="Hugging Face"/>
+                    <MenuFlyoutItem Command="{Binding Source={StaticResource TrayIconViewModel}, Path=SwitchToOllamaCommand}" Text="Ollama"/>
+                    <MenuFlyoutItem Command="{Binding Source={StaticResource TrayIconViewModel}, Path=SwitchToTongyiCommand}" Text="通义千问"/>
+                </MenuFlyoutSubItem>
                 <MenuFlyoutSeparator />
                 <MenuFlyoutItem Command="{Binding Source={StaticResource TrayIconViewModel}, Path=ShowHideWindowCommand}" Text="ShowHide"/>
                 <MenuFlyoutSeparator />
