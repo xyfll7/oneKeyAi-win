@@ -34,7 +34,7 @@ namespace oneKeyAi_win
             this.ExtendsContentIntoTitleBar = true;
             this.SetTitleBar(AppTitleBar);
             this.AppWindow.SetIcon("Assets/Logo.ico");
-            //this.AppWindow.TitleBar.PreferredHeightOption = TitleBarHeightOption.Tall;
+            this.AppWindow.TitleBar.PreferredHeightOption = TitleBarHeightOption.Tall;
 
             // Initialize the ViewModel directly since Resources is not available in Window
             _viewModel = new MainPageViewModel();
