@@ -31,8 +31,8 @@ namespace oneKeyAi_win
         public MainWindow()
         {
             InitializeComponent();
-            //this.ExtendsContentIntoTitleBar = true;
-            this.SetTitleBar(TitleBar);
+            this.ExtendsContentIntoTitleBar = true;
+            this.SetTitleBar(AppTitleBar);
             this.AppWindow.SetIcon("Assets/Logo.ico");
             //this.AppWindow.TitleBar.PreferredHeightOption = TitleBarHeightOption.Tall;
 
@@ -105,12 +105,12 @@ namespace oneKeyAi_win
             }
         }
 
-        private void TitleBar_PaneToggleRequested(TitleBar _, object __)
+        private void AppTitleBar_PaneToggleRequested(TitleBar _, object __)
         {
             NavigationView.IsPaneOpen = !NavigationView.IsPaneOpen;
         }
 
-        private void TitleBar_BackRequested(TitleBar _, object __)
+        private void AppTitleBar_BackRequested(TitleBar _, object __)
         {
             if (NavigationViewFrame.CanGoBack)
             {

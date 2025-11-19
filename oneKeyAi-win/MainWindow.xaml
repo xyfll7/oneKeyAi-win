@@ -18,17 +18,23 @@
         </Grid.RowDefinitions>
         <TitleBar 
                Margin="2 4 0 0"
-               x:Name="TitleBar"
+               x:Name="AppTitleBar"
                Title="oneKey"
                Subtitle="Preview"
                IsBackButtonVisible="{x:Bind NavigationViewFrame.CanGoBack, Mode=OneWay}"
                IsBackButtonEnabled="{x:Bind NavigationViewFrame.CanGoBack, Mode=OneWay}"
                IsPaneToggleButtonVisible="True"
-               BackRequested="TitleBar_BackRequested"
-               PaneToggleRequested="TitleBar_PaneToggleRequested" >
-            <TitleBar.IconSource>
-                <ImageIconSource ImageSource="/Assets/Logo.ico" />
-            </TitleBar.IconSource>
+               BackRequested="AppTitleBar_BackRequested"
+               PaneToggleRequested="AppTitleBar_PaneToggleRequested" >
+            <TitleBar.LeftHeader>
+                <ImageIcon
+                     Height="16"
+                     Margin="0,0,8,0"
+                     Source="/Assets/Logo.ico" />
+            </TitleBar.LeftHeader>
+            <TitleBar.Content>
+                <TextBlock Text="123"></TextBlock>
+            </TitleBar.Content>
         </TitleBar>
         <NavigationView 
                     Grid.Row="1"
