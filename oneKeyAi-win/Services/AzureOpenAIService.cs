@@ -19,6 +19,10 @@ namespace oneKeyAi_win.Services
         private string _apiKey = "";
         private string _baseUrl = "";
         private string _deploymentName = "";
+        private static readonly JsonSerializerOptions _jsonSerializerOptions = new()
+        {
+            PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower
+        };
 
         public AzureOpenAIService() : this("", "", "")
         {
@@ -68,10 +72,7 @@ namespace oneKeyAi_win.Services
                 MaxTokens = maxTokens
             };
 
-            var json = JsonSerializer.Serialize(request, new JsonSerializerOptions
-            {
-                PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower
-            });
+            var json = JsonSerializer.Serialize(request, _jsonSerializerOptions);
 
             var content = new StringContent(json, Encoding.UTF8, "application/json");
 
@@ -128,10 +129,7 @@ namespace oneKeyAi_win.Services
                 MaxTokens = maxTokens
             };
 
-            var json = JsonSerializer.Serialize(request, new JsonSerializerOptions
-            {
-                PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower
-            });
+            var json = JsonSerializer.Serialize(request, _jsonSerializerOptions);
 
             var content = new StringContent(json, Encoding.UTF8, "application/json");
 
@@ -172,7 +170,7 @@ namespace oneKeyAi_win.Services
 
         public async Task<ITextResponse> GenerateTextAsync(string model, string prompt, double temperature = 0.7, int maxTokens = 1000)
         {
-            var messages = new List<Message>
+            var messages = new()
             {
                 new Message { Role = "user", Content = prompt }
             };
