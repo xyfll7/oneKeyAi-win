@@ -19,6 +19,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
@@ -35,6 +36,17 @@ namespace oneKeyAi_win
     /// </summary>
     public partial class App : Application
     {
+        [LibraryImport("user32.dll", EntryPoint = "SetForegroundWindow")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        private static partial bool SetForegroundWindow(IntPtr hWnd);
+
+        [LibraryImport("user32.dll", EntryPoint = "ShowWindow")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        private static partial bool ShowWindow(IntPtr hWnd, int nCmdShow);
+
+        [LibraryImport("user32.dll")]
+        private static partial IntPtr GetForegroundWindow();
+        private const int SW_RESTORE = 9;
         public MainWindow? _window;
         public static IServiceProvider? ServiceProvider { get; private set; }
         /// <summary>
@@ -88,18 +100,41 @@ namespace oneKeyAi_win
         {
             if (_window == null)
             {
-                _window = new();
+                // 1. 窗口不存在: 创建、设置事件、显示并置顶
+                _window = new MainWindow();
                 _window.Closed += (sender, args) => _window = null;
+
+                // 自动隐藏逻辑保持不变，确保在 Deactivated 时隐藏窗口
+                _window.Activated += (sender, args) =>
+                {
+                    if (args.WindowActivationState == WindowActivationState.Deactivated)
+                    {
+                        _window?.Hide();
+                    }
+                };
+
                 _window.Activate();
-            }
-            else if(_window.Visible)
-            {
-                _window.Hide();
+                var hwnd = WinRT.Interop.WindowNative.GetWindowHandle(_window);
+                ShowWindow(hwnd, SW_RESTORE);
+                SetForegroundWindow(hwnd);
             }
             else
             {
+                // 2. 窗口已存在: 检查状态并置顶，或什么也不做
+                var hwnd = WinRT.Interop.WindowNative.GetWindowHandle(_window);
+
+                // 检查窗口是否已经是最顶层窗口 (即已打开并聚焦)
+                if (GetForegroundWindow() == hwnd && _window.Visible)
+                {
+                    // 窗口已经在最上层且可见，什么也不做 (解决点击闪烁的问题)
+                    return;
+                }
+
+                // 窗口已存在但已隐藏或不在最上层，显示并置顶
                 _window.Show();
-                _window.Activate();
+                _window.Activate(); // 激活 WinUI 窗口
+                ShowWindow(hwnd, SW_RESTORE); // 确保从最小化状态恢复
+                SetForegroundWindow(hwnd); // 确保窗口位于所有其他窗口之上
             }
         }
     }
