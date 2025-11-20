@@ -21,7 +21,7 @@ namespace oneKeyAi_win.Services
             return _currentProvider;
         }
 
-        private ILargeModelService GetServiceForProvider(ModelProvider provider)
+        private static ILargeModelService GetServiceForProvider(ModelProvider provider)
         {
             var service = LargeModelServiceFactory.GetService(provider);
             if (service is ILargeModelService typedService)

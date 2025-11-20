@@ -170,10 +170,7 @@ namespace oneKeyAi_win.Services
 
         public async Task<ITextResponse> GenerateTextAsync(string model, string prompt, double temperature = 0.7, int maxTokens = 1000)
         {
-            var messages = new()
-            {
-                new Message { Role = "user", Content = prompt }
-            };
+            List<Message> messages = [new Message { Role = "user", Content = prompt }];
             var azureResponse = await ChatCompletionsAsync(messages, temperature, maxTokens);
 
             // Extract the text content from the Azure OpenAI response

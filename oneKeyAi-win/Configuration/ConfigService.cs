@@ -41,7 +41,7 @@ namespace oneKeyAi_win.Configuration
             catch (Exception ex)
             {
                 System.Diagnostics.Debug.WriteLine($"加载配置出错: {ex.Message}");
-                return new UserConfig();
+                return new();
             }
         }
 

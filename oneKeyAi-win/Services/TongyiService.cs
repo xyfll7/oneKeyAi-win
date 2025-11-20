@@ -13,6 +13,11 @@ namespace oneKeyAi_win.Services
         private static readonly Lazy<TongyiService> _instance =
             new(() => new TongyiService());
 
+        private static readonly JsonSerializerOptions _jsonSerializerOptions = new()
+        {
+            PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+        };
+
         public static TongyiService Instance => _instance.Value;
 
         private readonly HttpClient _httpClient;
@@ -59,25 +64,19 @@ namespace oneKeyAi_win.Services
             }
             else
             {
-                messageList = new List<TongyiMessage>
-                {
-                    new TongyiMessage { Role = "user", Content = prompt }
-                };
+                messageList = [new TongyiMessage { Role = "user", Content = prompt }];
             }
 
             // Create a request compatible with OpenAI format
             var request = new
             {
-                model = model,
+                model,
                 messages = messageList,
-                temperature = temperature,
+                temperature,
                 max_tokens = maxTokens
             };
 
-            var json = JsonSerializer.Serialize(request, new JsonSerializerOptions
-            {
-                PropertyNamingPolicy = JsonNamingPolicy.CamelCase
-            });
+            var json = JsonSerializer.Serialize(request, _jsonSerializerOptions);
 
             var content = new StringContent(json, Encoding.UTF8, "application/json");
 
@@ -130,14 +129,11 @@ namespace oneKeyAi_win.Services
             // Create a request compatible with OpenAI format
             var request = new
             {
-                model = model,
+                model,
                 input = texts
             };
 
-            var json = JsonSerializer.Serialize(request, new JsonSerializerOptions
-            {
-                PropertyNamingPolicy = JsonNamingPolicy.CamelCase
-            });
+            var json = JsonSerializer.Serialize(request, _jsonSerializerOptions);
 
             var content = new StringContent(json, Encoding.UTF8, "application/json");
 
@@ -202,10 +198,7 @@ namespace oneKeyAi_win.Services
                 }
             };
 
-            var json = JsonSerializer.Serialize(request, new JsonSerializerOptions
-            {
-                PropertyNamingPolicy = JsonNamingPolicy.CamelCase
-            });
+            var json = JsonSerializer.Serialize(request, _jsonSerializerOptions);
 
             var content = new StringContent(json, Encoding.UTF8, "application/json");
 
@@ -314,13 +307,13 @@ namespace oneKeyAi_win.Services
     public class TongyiRequest
     {
         public string Model { get; set; } = string.Empty;
-        public TongyiInput Input { get; set; } = new TongyiInput();
-        public TongyiParameters Parameters { get; set; } = new TongyiParameters();
+        public TongyiInput Input { get; set; } = new();
+        public TongyiParameters Parameters { get; set; } = new();
     }
 
     public class TongyiInput
     {
-        public List<TongyiMessage> Messages { get; set; } = new List<TongyiMessage>();
+        public List<TongyiMessage> Messages { get; set; } = [];
     }
 
     public class TongyiMessage
@@ -342,13 +335,13 @@ namespace oneKeyAi_win.Services
     public class TongyiEmbeddingRequest
     {
         public string Model { get; set; } = string.Empty;
-        public TongyiEmbeddingInput Input { get; set; } = new TongyiEmbeddingInput();
-        public TongyiEmbeddingParameters Parameters { get; set; } = new TongyiEmbeddingParameters();
+        public TongyiEmbeddingInput Input { get; set; } = new();
+        public TongyiEmbeddingParameters Parameters { get; set; } = new();
     }
 
     public class TongyiEmbeddingInput
     {
-        public List<string> Texts { get; set; } = new List<string>();
+        public List<string> Texts { get; set; } = [];
     }
 
     public class TongyiEmbeddingParameters
@@ -359,8 +352,8 @@ namespace oneKeyAi_win.Services
     public class TongyiImageRequest
     {
         public string Model { get; set; } = string.Empty;
-        public TongyiImageInput Input { get; set; } = new TongyiImageInput();
-        public TongyiImageParameters Parameters { get; set; } = new TongyiImageParameters();
+        public TongyiImageInput Input { get; set; } = new();
+        public TongyiImageParameters Parameters { get; set; } = new();
     }
 
     public class TongyiImageInput

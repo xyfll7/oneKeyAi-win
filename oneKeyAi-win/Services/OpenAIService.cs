@@ -13,6 +13,11 @@ namespace oneKeyAi_win.Services
         private static readonly Lazy<OpenAIService> _instance =
             new(() => new OpenAIService());
 
+        private static readonly JsonSerializerOptions _jsonSerializerOptions = new()
+        {
+            PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower
+        };
+
         public static OpenAIService Instance => _instance.Value;
 
         private readonly HttpClient _httpClient;
@@ -65,16 +70,10 @@ namespace oneKeyAi_win.Services
             }
             else
             {
-                request.Messages = new List<Message>
-                {
-                    new Message { Role = "user", Content = prompt }
-                };
+                request.Messages = [new Message { Role = "user", Content = prompt }];
             }
 
-            var json = JsonSerializer.Serialize(request, new JsonSerializerOptions
-            {
-                PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower
-            });
+            var json = JsonSerializer.Serialize(request, _jsonSerializerOptions);
 
             var content = new StringContent(json, Encoding.UTF8, "application/json");
 
@@ -129,13 +128,10 @@ namespace oneKeyAi_win.Services
                 Prompt = prompt ?? string.Empty,
                 Temperature = temperature,
                 MaxTokens = maxTokens,
-                Stop = new List<string> { "\n\n" }
+                Stop = ["\n\n"]
             };
 
-            var json = JsonSerializer.Serialize(request, new JsonSerializerOptions
-            {
-                PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower
-            });
+            var json = JsonSerializer.Serialize(request, _jsonSerializerOptions);
 
             var content = new StringContent(json, Encoding.UTF8, "application/json");
 
@@ -223,7 +219,7 @@ namespace oneKeyAi_win.Services
     public class OpenAIRequest
     {
         public string Model { get; set; } = string.Empty;
-        public List<Message> Messages { get; set; } = new List<Message>();
+        public List<Message> Messages { get; set; } = [];
         public double Temperature { get; set; } = 0.7;
         public int MaxTokens { get; set; } = 1000;
         public List<string>? Stop { get; set; }

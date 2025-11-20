@@ -14,6 +14,11 @@ namespace oneKeyAi_win.Services
         private static readonly Lazy<HuggingFaceService> _instance =
             new(() => new HuggingFaceService());
 
+        private static readonly JsonSerializerOptions _jsonSerializerOptions = new()
+        {
+            PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+        };
+
         public static HuggingFaceService Instance => _instance.Value;
 
         private readonly HttpClient _httpClient;
@@ -71,10 +76,7 @@ namespace oneKeyAi_win.Services
                 Parameters = parameters
             };
 
-            var json = JsonSerializer.Serialize(request, new JsonSerializerOptions
-            {
-                PropertyNamingPolicy = JsonNamingPolicy.CamelCase
-            });
+            var json = JsonSerializer.Serialize(request, _jsonSerializerOptions);
 
             var content = new StringContent(json, Encoding.UTF8, "application/json");
 
@@ -138,10 +140,7 @@ namespace oneKeyAi_win.Services
                 }
             };
 
-            var json = JsonSerializer.Serialize(request, new JsonSerializerOptions
-            {
-                PropertyNamingPolicy = JsonNamingPolicy.CamelCase
-            });
+            var json = JsonSerializer.Serialize(request, _jsonSerializerOptions);
 
             var content = new StringContent(json, Encoding.UTF8, "application/json");
 
@@ -205,10 +204,7 @@ namespace oneKeyAi_win.Services
                 Parameters = parameters
             };
 
-            var json = JsonSerializer.Serialize(request, new JsonSerializerOptions
-            {
-                PropertyNamingPolicy = JsonNamingPolicy.CamelCase
-            });
+            var json = JsonSerializer.Serialize(request, _jsonSerializerOptions);
 
             var content = new StringContent(json, Encoding.UTF8, "application/json");
 
@@ -302,7 +298,7 @@ namespace oneKeyAi_win.Services
 
     public class QuestionAnsweringRequest
     {
-        public QAInputs Inputs { get; set; } = new QAInputs();
+        public QAInputs Inputs { get; set; } = new();
         public Dictionary<string, object>? Parameters { get; set; }
     }
 

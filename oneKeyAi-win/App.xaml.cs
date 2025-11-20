@@ -35,7 +35,7 @@ namespace oneKeyAi_win
     /// </summary>
     public partial class App : Application
     {
-        public Window? _window;
+        public MainWindow? _window;
         public static IServiceProvider? ServiceProvider { get; private set; }
         /// <summary>
         /// Initializes the singleton application object.  This is the first line of authored code
@@ -47,7 +47,7 @@ namespace oneKeyAi_win
             ConfigureServices();
         }
 
-        private void ConfigureServices()
+        private static void ConfigureServices()
         {
             var services = new ServiceCollection();
 
@@ -88,7 +88,7 @@ namespace oneKeyAi_win
         {
             if (_window == null)
             {
-                _window = new MainWindow();
+                _window = new();
                 _window.Closed += (sender, args) => _window = null;
                 _window.Activate();
             }

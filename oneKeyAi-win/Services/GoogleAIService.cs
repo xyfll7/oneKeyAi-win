@@ -60,17 +60,11 @@ namespace oneKeyAi_win.Services
 
             var request = new GoogleAIRequest
             {
-                Contents = new List<Content>
+                Contents = [new Content
                 {
-                    new Content
-                    {
-                        Parts =
-                        {
-                            new Part { Text = prompt }
-                        }
-                    }
-                },
-                GenerationConfig = new GenerationConfig
+                    Parts = [new Part { Text = prompt }]
+                }],
+                GenerationConfig = new()
                 {
                     Temperature = temperature,
                     MaxOutputTokens = maxOutputTokens
@@ -125,17 +119,11 @@ namespace oneKeyAi_win.Services
 
             var request = new GoogleAIRequest
             {
-                Contents = new List<Content>
+                Contents = [new Content
                 {
-                    new Content
-                    {
-                        Parts =
-                        {
-                            new Part { Text = prompt }
-                        }
-                    }
-                },
-                GenerationConfig = new GenerationConfig
+                    Parts = [new Part { Text = prompt }]
+                }],
+                GenerationConfig = new()
                 {
                     Temperature = temperature,
                     MaxOutputTokens = maxOutputTokens
@@ -242,7 +230,7 @@ namespace oneKeyAi_win.Services
     public class Content
     {
         [JsonPropertyName("parts")]
-        public List<Part> Parts { get; set; } = new();
+        public List<Part> Parts { get; set; } = [];
         [JsonPropertyName("role")]
         public string? Role { get; set; }  // 添加这个属性
     }

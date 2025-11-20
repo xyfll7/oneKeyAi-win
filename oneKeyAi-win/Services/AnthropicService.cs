@@ -13,6 +13,11 @@ namespace oneKeyAi_win.Services
         private static readonly Lazy<AnthropicService> _instance =
             new(() => new AnthropicService());
 
+        private static readonly JsonSerializerOptions _jsonSerializerOptions = new()
+        {
+            PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower
+        };
+
         public static AnthropicService Instance => _instance.Value;
 
         private readonly HttpClient _httpClient;
@@ -65,16 +70,10 @@ namespace oneKeyAi_win.Services
             }
             else
             {
-                request.Messages = new List<MessageBlock>
-                {
-                    new MessageBlock { Role = "user", Content = prompt }
-                };
+                request.Messages = [new MessageBlock { Role = "user", Content = prompt }];
             }
 
-            var json = JsonSerializer.Serialize(request, new JsonSerializerOptions
-            {
-                PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower
-            });
+            var json = JsonSerializer.Serialize(request, _jsonSerializerOptions);
 
             var content = new StringContent(json, Encoding.UTF8, "application/json");
 
@@ -130,13 +129,10 @@ namespace oneKeyAi_win.Services
                 Prompt = $"\n\nHuman: {prompt}\n\nAssistant:",
                 MaxTokensToSample = maxTokensToSample,
                 Temperature = temperature,
-                StopSequences = new List<string> { "\n\nHuman:" }
+                StopSequences = ["\n\nHuman:"]
             };
 
-            var json = JsonSerializer.Serialize(request, new JsonSerializerOptions
-            {
-                PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower
-            });
+            var json = JsonSerializer.Serialize(request, _jsonSerializerOptions);
 
             var content = new StringContent(json, Encoding.UTF8, "application/json");
 
@@ -229,7 +225,7 @@ namespace oneKeyAi_win.Services
     public class AnthropicRequest
     {
         public string Model { get; set; } = string.Empty;
-        public List<MessageBlock> Messages { get; set; } = new List<MessageBlock>();
+        public List<MessageBlock> Messages { get; set; } = [];
         public int MaxTokens { get; set; } = 1000;
         public double Temperature { get; set; } = 0.7;
         public List<string>? StopSequences { get; set; }
