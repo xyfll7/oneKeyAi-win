@@ -242,7 +242,7 @@ namespace oneKeyAi_win.Services
     public class Content
     {
         [JsonPropertyName("parts")]
-        public List<Part>? Parts { get; set; }
+        public List<Part> Parts { get; set; } = new();
         [JsonPropertyName("role")]
         public string? Role { get; set; }  // 添加这个属性
     }
