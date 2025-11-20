@@ -21,10 +21,7 @@ namespace oneKeyAi_win.ViewModels
             modelService = (App.ServiceProvider?.GetService(typeof(ILargeModelService)) as SwitchableModelService);
 
             // Set the default API key for the default provider (Tongyi)
-            if (modelService != null)
-            {
-                modelService.SetApiKey("sk-3ab003e0b90346e58d4072f402a15b13");
-            }
+            modelService?.SetApiKey("sk-3ab003e0b90346e58d4072f402a15b13");
 
             // Initialize the current model provider description
             OnPropertyChanged(nameof(CurrentModelProviderDescription));
@@ -129,7 +126,7 @@ namespace oneKeyAi_win.ViewModels
         }
 
         [RelayCommand]
-        private async Task Test()
+        private static async Task Test()
         {
             System.Diagnostics.Debug.WriteLine($"11111");
             UserConfig CC = new ()
@@ -145,7 +142,7 @@ namespace oneKeyAi_win.ViewModels
             System.Diagnostics.Debug.WriteLine($"配置文件路径: {ConfigService.GetConfigPath()}");
         }
         [RelayCommand]
-        private void ShowHideWindow()
+        private static void ShowHideWindow()
         {
             // Logic to show the MainWindow
             var app = (App)App.Current;
@@ -154,7 +151,7 @@ namespace oneKeyAi_win.ViewModels
         }
 
         [RelayCommand]
-        private void ExitApplication()
+        private static void ExitApplication()
         {
             var app = (App)App.Current;
             app._window?.Close();
