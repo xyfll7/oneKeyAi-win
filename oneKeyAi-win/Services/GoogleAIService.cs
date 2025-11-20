@@ -18,6 +18,10 @@ namespace oneKeyAi_win.Services
         private readonly HttpClient _httpClient;
         private string _apiKey = "";
         private string _baseUrl = "https://generativelanguage.googleapis.com/v1beta";
+        private static readonly JsonSerializerOptions _jsonSerializerOptions = new()
+        {
+            PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+        };
 
         public GoogleAIService() : this("", "https://generativelanguage.googleapis.com/v1beta")
         {
@@ -60,7 +64,7 @@ namespace oneKeyAi_win.Services
                 {
                     new Content
                     {
-                        Parts = new List<Part>
+                        Parts =
                         {
                             new Part { Text = prompt }
                         }
@@ -73,10 +77,7 @@ namespace oneKeyAi_win.Services
                 }
             };
 
-            var json = JsonSerializer.Serialize(request, new JsonSerializerOptions
-            {
-                PropertyNamingPolicy = JsonNamingPolicy.CamelCase
-            });
+            var json = JsonSerializer.Serialize(request, _jsonSerializerOptions);
 
             var content = new StringContent(json, Encoding.UTF8, "application/json");
 
@@ -128,7 +129,7 @@ namespace oneKeyAi_win.Services
                 {
                     new Content
                     {
-                        Parts = new List<Part>
+                        Parts =
                         {
                             new Part { Text = prompt }
                         }
@@ -141,10 +142,7 @@ namespace oneKeyAi_win.Services
                 }
             };
 
-            var json = JsonSerializer.Serialize(request, new JsonSerializerOptions
-            {
-                PropertyNamingPolicy = JsonNamingPolicy.CamelCase
-            });
+            var json = JsonSerializer.Serialize(request, _jsonSerializerOptions);
 
             var content = new StringContent(json, Encoding.UTF8, "application/json");
 
