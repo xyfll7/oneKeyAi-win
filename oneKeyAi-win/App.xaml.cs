@@ -44,8 +44,6 @@ namespace oneKeyAi_win
         [return: MarshalAs(UnmanagedType.Bool)]
         private static partial bool ShowWindow(IntPtr hWnd, int nCmdShow);
 
-        [LibraryImport("user32.dll")]
-        private static partial IntPtr GetForegroundWindow();
         private const int SW_RESTORE = 9;
         public MainWindow? _window;
         public static IServiceProvider? ServiceProvider { get; private set; }
@@ -103,16 +101,6 @@ namespace oneKeyAi_win
                 // 1. 窗口不存在: 创建、设置事件、显示并置顶
                 _window = new MainWindow();
                 _window.Closed += (sender, args) => _window = null;
-
-                // 自动隐藏逻辑保持不变，确保在 Deactivated 时隐藏窗口
-                _window.Activated += (sender, args) =>
-                {
-                    if (args.WindowActivationState == WindowActivationState.Deactivated)
-                    {
-                        _window?.Hide();
-                    }
-                };
-
                 _window.Activate();
                 var hwnd = WinRT.Interop.WindowNative.GetWindowHandle(_window);
                 ShowWindow(hwnd, SW_RESTORE);
@@ -122,14 +110,6 @@ namespace oneKeyAi_win
             {
                 // 2. 窗口已存在: 检查状态并置顶，或什么也不做
                 var hwnd = WinRT.Interop.WindowNative.GetWindowHandle(_window);
-
-                // 检查窗口是否已经是最顶层窗口 (即已打开并聚焦)
-                if (GetForegroundWindow() == hwnd && _window.Visible)
-                {
-                    // 窗口已经在最上层且可见，什么也不做 (解决点击闪烁的问题)
-                    return;
-                }
-
                 // 窗口已存在但已隐藏或不在最上层，显示并置顶
                 _window.Show();
                 _window.Activate(); // 激活 WinUI 窗口
